@@ -1,90 +1,219 @@
-var theThing = document.querySelector("#thing");
-var currentPos = 0;
-var playerPos = -300;
-
-let container = document.getElementById('contentContainer');
-let player = document.getElementById('player');
-player.style.bottom = playerPos + "px";
-// console.log(container.style.width.value);
-var requestAnimationFrame = window.requestAnimationFrame;
-let up = 'up';
-let down = 'down';
-let left = 'left';
-let right = 'right';
+// HTML & CSS
+// empty game div -- maybe graphics - goals, start area, highway lanes (background image w/actual goals??)
+// modal with form, seed input, submit,
+document.addEventListener("DOMContentLoaded", function(event) {
+   // global vars
+   let container = document.getElementById('container');
+   let modal = document.getElementById('modal');
+   let seed = '';
+   let characterPosHoriz = 500;
+   let characterPosVert = 0;
 
 
 
-function moveThing() {
-   currentPos = currentPos + 2;
+   // make starting modal
+   function makeModal() {
+      let form = document.createElement('form');
+      let seedInput = document.createElement('input');
+      let seedLabel = document.createElement('label');
+      let submit = document.createElement('input');
+      seedInput.setAttribute('id', 'seed');
+      seedLabel.htmlFor = 'seed';
+      seedLabel.innerHTML = 'Please submit a seed:'
+      submit.type = 'submit';
+      form.append(seedLabel);
+      form.append(seedInput);
+      form.append(submit);
+      modal.append(form);
+      submit.addEventListener("click", function(event) {
+         event.preventDefault();
+         seed = seedInput.value;
+         console.log(seed);
+         modal.style.display = 'none';
+         setupGame();
+      });
+   }
 
-   //  console.log('running');
-   theThing.style.left = currentPos + "px";
-   //  console.log(theThing.style.left);
-   //  console.log(player.style.bottom);
-   if (Math.abs(currentPos) >= 550) {
-      currentPos = 0;
+   makeModal();
+
+   function setupGame() {
+
+      defineCharacter();
+      makeCharacters();
+      defineRobots(2, 200);
+      makeRobots();
+   }
+
+   function defineRobots(set, row) {
+      for (let x = 0; x < 4; x++) {
+         let offset = 300 * x;
+         setTimeout(function() {
+            console.log('robots');
+            let robot = document.createElement('div');
+            robot.className = 'robot';
+            robot.style.backgroundImage = `url(https://robohash.org/${seed}/?set=set${set})`;
+            container.append(robot);
+            robot.style.left = -150 + 'px';
+            robot.style.bottom = `${row}px`;
+            let robotPos = offset;
+
+            function moveRobot() {
+               robotPos = robotPos + 2;
+
+               robot.style.left = robotPos + "px";
+
+               if (Math.abs(robotPos) >= 1100) {
+                  robotPos = -150;
+               }
+
+               requestAnimationFrame(moveRobot);
+
+            };
+            offset = offset + 100;
+            moveRobot();
+
+         }, 3000);
+
+
+      }
+
    }
 
 
-   requestAnimationFrame(moveThing);
-   if (theThing.style.left === '200px') {
-      console.log('it\'s a hit!');
-   }
-}
-moveThing();
 
-
-
-
-function movePlayer(direction) {
-   console.log(direction, 'direction');
-   if (direction === up) {
-      console.log('matches');
-      playerPos = (playerPos + 15);
-      player.style.bottom = playerPos + "px";
-
-      console.log(player.style.bottom, 'psb');
-   }
-}
-
-
-// get thing to move left to right in a loop
-
-// get things to notice each other/ make contact
-
-// allow for user input (arrow keys)
-
-document.onkeydown = checkKey;
-
-function checkKey(e) {
-
-   e = e || window.event;
-
-   if (e.keyCode == '38') {
-      // up arrow
-      movePlayer(up);
-      // console.log('clicked up');
-   } else if (e.keyCode == '40') {
-      // down arrow
-      movePlayer(down);
-   } else if (e.keyCode == '37') {
-      // left arrow
-      movePlayer(left);
-   } else if (e.keyCode == '39') {
-      // right arrow
-      movePlayer(right);
+   function defineCharacter() {
+      console.log('characters');
+      let character = document.createElement('div');
+      character.id = 'character';
+      character.className = 'character';
+      character.style.backgroundImage = `url(https://robohash.org/${seed}/?set=set3)`;
+      container.append(character);
+      character.style.left = characterPosHoriz + 'px';
+      character.style.bottom = characterPosVert + 'px';
    }
 
-}
+   function makeRobots() {
+      console.log('make r');
+   }
+
+   function makeCharacters() {
+      console.log('make c');
+   }
+
+   // function setup game
+
+   // define robot templates ()
+   // make robots ()
+   // create character template ()
+   // make robots ()
+
+   //define robot templates:
+   // GET request(s) to robots/seed - 1 for character, 2 for monster types
+   // define robots objects
+   // define character object
+
+   // make robots
+   // generate 1robot() every x seconds, 5 times -- row 1 & 3
+   // generate 1robot() type 2 every x seconds, 5 times - row 2
+   // generate character();
 
 
-let formSub = document.getElementById('submit');
-formSub.addEventListener("click", getSeed);
-let seed = document.getElementById('seed');
-let mySeed = '';
+   //generate 1 robot:
+   // set properties
+   // set speed & movement, start over
 
-function getSeed() {
-   mySeed = seed.value;
-   player.src = `https://robohash.org/${mySeed}/?set=set3`;
-   theThing.src = `https://robohash.org/${mySeed}/?set=set2`;
-}
+   //generate character:
+   // set properties
+   // set movement to equal key values
+
+   //listen for key values after game setup
+
+   // every time robot moves
+   // check if robot left, right, top, bottom coordinates match character
+   // lives --
+   // if lives = 0
+   // alert modal - out of lives!
+   // start button - direct back to index/reload page
+   // move character back to beginning
+
+   // every time character moves
+   // check if character left, right, top, bottom coordinates match goal
+   // leave a character or star etc in goal
+   // update goal array
+   // if goal array = full
+   // alert modal - you win!
+   // start button - direct back to index/reload page
+   // move character back to beginning
+
+});
+//global vars
+// modal
+// submit
+// form input
+// seed
+// array of goals
+// goal 1
+// goal 2
+// goal 3
+// goal 4
+// goal 5
+// up, down, left, right
+
+// on DOM load
+// function run modal X
+// display modal X
+// listen for submit click X
+// store seed input value in seed variable X
+// hide modal X
+
+
+// setup game ()
+// run modal()
+
+// function setup game
+
+// define robot templates ()
+// make robots ()
+// create character template ()
+// make robots ()
+
+//define robot templates:
+// GET request(s) to robots/seed - 1 for character, 2 for monster types
+// define robots objects
+// define character object
+
+// make robots
+// generate 1robot() every x seconds, 5 times -- row 1 & 3
+// generate 1robot() type 2 every x seconds, 5 times - row 2
+// generate character();
+
+
+//generate 1 robot:
+// set properties
+// set speed & movement, start over
+
+//generate character:
+// set properties
+// set movement to equal key values
+
+//listen for key values after game setup
+
+// every time robot moves
+// check if robot left, right, top, bottom coordinates match character
+// lives --
+// if lives = 0
+// alert modal - out of lives!
+// start button - direct back to index/reload page
+// move character back to beginning
+
+// every time character moves
+// check if character left, right, top, bottom coordinates match goal
+// leave a character or star etc in goal
+// update goal array
+// if goal array = full
+// alert modal - you win!
+// start button - direct back to index/reload page
+// move character back to beginning
+//back to beginning
+//caracter back to beginning
+//back to beginning

@@ -2,52 +2,22 @@
 <html>
 
 <head>
-  <meta content="en-us" http-equiv="Content-Language">
   <meta charset="utf-8">
-  <meta content="stuff, to, help, search, engines, not" name="keywords">
-  <meta content="What this page is about." name="description">
-  <meta content="An Interesting Title Goes Here" name="title">
-  <title>Move to Click Position</title>
-  <style>
-    body {
-      background-color: #FFF;
-      margin: 30px;
-      margin-top: 10px;
-    }
-
-    #contentContainer {
-      width: 550px;
-      height: 350px;
-      border: 5px black solid;
-      overflow: hidden;
-      background-color: lightblue;
-      margin: 0 auto;
-    }
-
-    #thing {
-      position: relative;
-      left: 0px;
-      top: 25px;
-    }
-
-    #player {
-      position: relative;
-      left: 150px;
-      /*bottom: -300px;*/
-    }
-  </style>
+  <title>ROGGER</title>
+  <link rel="stylesheet" href="css/main.css">
 </head>
 
 <body>
-  <div id="contentContainer">
-    <img id="thing" alt="the thing" height="50" src="https://robohash.org/jamie/?Set=set2" width="50">
-    <img id="player" height="50" width="50" src="https://robohash.org/jamie/?set=set3" alt="">
+  <div id="container" class="container">
+    <div id="goals" class="goals">
+      <div class="goal"></div>
+      <div class="goal"></div>
+      <div class="goal"></div>
+      <div class="goal"></div>
+      <div class="goal"></div>
+    </div>
+    <div id="modal" class="modal"></div>
   </div>
-  <form action="#">
-    <label for="seed">Please provide your name for graphics seed:</label>
-    <input id="seed" type="text">
-    <input id="submit" type="submit" value="click here!">
-  </form>
 </body>
 <script src="main.js"></script>
 
