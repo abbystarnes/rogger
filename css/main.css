@@ -35,7 +35,8 @@
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain; }
+  background-size: contain;
+  background-color: blue; }
 
 .win {
   background-color: gold; }
@@ -44,6 +45,7 @@
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain; }
+  background-size: contain;
+  background-color: grey; }
 
 /*# sourceMappingURL=main.css.map */
