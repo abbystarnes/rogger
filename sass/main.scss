@@ -44,7 +44,11 @@ $selago: #E5EDFB;
   height: 100px;
   width: 100px;
   background-size: contain;
-  background-color: blue;
+  // background-color: blue;
+}
+
+.win {
+  background-color: gold;
 }
 
 .robot {
@@ -52,5 +56,5 @@ $selago: #E5EDFB;
   height: 100px;
   width: 100px;
   background-size: contain;
-  background-color: grey;
+  // background-color: grey;
 }

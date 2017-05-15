@@ -35,14 +35,15 @@
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: blue; }
+  background-size: contain; }
+
+.win {
+  background-color: gold; }
 
 .robot {
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: grey; }
+  background-size: contain; }
 
 /*# sourceMappingURL=main.css.map */
