@@ -22,14 +22,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let setup = false;
    let lives = 3;
 
-   // check goal
-   //  for (let x = 0; x < goals.length; x++){
-   //
-   //  }
 
-   // move user
-
-   // make starting modal
    function makeModal() {
       let form = document.createElement('form');
       let seedInput = document.createElement('input');
@@ -58,32 +51,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       defineCharacter();
       makeCharacters();
-      defineRobots(1, 100, 0, 1);
-      defineRobots(2, 200, 1, -1);
-      defineRobots(1, 400, 2, 1);
-      defineRobots(2, 500, 3, -1);
+      defineRobots(1, 100, 0, 1, 4, 300);
+      defineRobots(2, 200, 1, -2, 3, 390);
+      defineRobots(1, 400, 2, 1, 4, 300);
+      defineRobots(2, 500, 3, -2, 3, 390);
       makeRobots();
       setup = true;
    }
 
-   function defineRobots(set, row, counter, speed) {
-
-      for (let x = 0; x < 4; x++) {
-         let offset = 300 * x;
+   function defineRobots(set, row, counter, speed, number, between) {
+      console.log(speed, 'speed');
+      for (let x = 0; x < number; x++) {
+         let offset = between * x;
 
          setTimeout(function() {
             // console.log('robots');
+
             let robot = document.createElement('div');
             robot.className = 'robot';
             robot.style.backgroundImage = `url(https://robohash.org/${seed}/?set=set${set})`;
             container.append(robot);
+
             robot.style.left = -150 + 'px';
             robot.style.bottom = `${row}px`;
             let robotPos = offset;
             robot.className += ` robot${x}`;
 
-            function moveRobot(myParam) {
-               robotPos = robotPos + 1;
+            function moveRobot() {
+               robotPos = robotPos + speed;
 
                robot.style.left = robotPos + "px";
 
@@ -93,20 +88,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   robotPos = -150;
                }
 
+               if ((robotPos) < -150) {
+                  robotPos = 1100;
+               }
+
+
                requestAnimationFrame(moveRobot);
-               checkCollision(counter);
+               checkCollision(counter, number);
 
             };
             offset = offset + 100;
-            // let james = 0;
-            // if (counter % 2 === 0) {
-            //    james = 1;
-            // }
-            // if (counter % 2 !== 0) {
-            //    james = (-1);
-            // }
 
-            moveRobot(speed);
+
+            moveRobot();
 
 
 
@@ -237,21 +231,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log('lives left:', lives);
    }
 
-   function checkCollision(param1) {
+   function checkCollision(param1, param2) {
 
 
-      for (let y = 0; y < 4; y++) {
+      for (let y = 0; y < param2; y++) {
          let robotName = 'robot' + (y);
-         //  console.log(robotName, 'rb name');
-         //  console.log(param1, 'index');
+
          robot1 = document.getElementsByClassName(`${robotName}`)[param1];
-         //  console.log(robot1);
-         //  console.log(robot1, 'robot by class array');
-         //  console.log(param1, 'param1');
-         //  let robotName = 'robot' + (y);
-         //  robot1 = document.getElementsByClassName(`${robotName}`)[param1];
-         //  console.log(robot1);
-         //  myRobot = document.getElementById(`${robotName}`);
 
          if (robot1) {
             charLeft = parseInt((character.style.left).match(/[0-9]+/));
@@ -269,340 +255,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
          }
 
-
-         // ((charLeft > robotLeft) && (charLeft < robotRight))
       }
    }
-   // function setup game
-
-   // define robot templates ()
-   // make robots ()
-   // create character template ()
-   // make robots ()
-
-   //define robot templates:
-   // GET request(s) to robots/seed - 1 for character, 2 for monster types
-   // define robots objects
-   // define character object
-
-   // make robots
-   // generate 1robot() every x seconds, 5 times -- row 1 & 3
-   // generate 1robot() type 2 every x seconds, 5 times - row 2
-   // generate character();
-
-
-   //generate 1 robot:
-   // set properties
-   // set speed & movement, start over
-
-   //generate character:
-   // set properties
-   // set movement to equal key values
-
-   //listen for key values after game setup
-
-   // every time robot moves
-   // check if robot left, right, top, bottom coordinates match character
-   // lives --
-   // if lives = 0
-   // alert modal - out of lives!
-   // start button - direct back to index/reload page
-   // move character back to beginning
-
-   // every time character moves
-   // check if character left, right, top, bottom coordinates match goal
-   // leave a character or star etc in goal
-   // update goal array
-   // if goal array = full
-   // alert modal - you win!
-   // start button - direct back to index/reload page
-   // move character back to beginning
-
 });
-//global vars
-// modal
-// submit
-// form input
-// seed
-// array of goals
-// goal 1
-// goal 2
-// goal 3
-// goal 4
-// goal 5
-// up, down, left, right
-
-// on DOM load
-// function run modal X
-// display modal X
-// listen for submit click X
-// store seed input value in seed variable X
-// hide modal X
-
-
-// setup game ()
-// run modal()
-
-// function setup game
-
-// define robot templates ()
-// make robots ()
-// create character template ()
-// make robots ()
-
-//define robot templates:
-// GET request(s) to robots/seed - 1 for character, 2 for monster types
-// define robots objects
-// define character object
-
-// make robots
-// generate 1robot() every x seconds, 5 times -- row 1 & 3
-// generate 1robot() type 2 every x seconds, 5 times - row 2
-// generate character();
-
-
-//generate 1 robot:
-// set properties
-// set speed & movement, start over
-
-//generate character:
-// set properties
-// set movement to equal key values
-
-//listen for key values after game setup
-
-// every time robot moves
-// check if robot left, right, top, bottom coordinates match character
-// lives --
-// if lives = 0
-// alert modal - out of lives!
-// start button - direct back to index/reload page
-// move character back to beginning
-
-// every time character moves
-// check if character left, right, top, bottom coordinates match goal
-// leave a character or star etc in goal
-// update goal array
-// if goal array = full
-// alert modal - you win!
-// start button - direct back to index/reload page
-// move character back to beginning
-//back to beginning
-//caracter back to beginning
-//back to beginning
-// array of goals
-// goal 1
-// goal 2
-// goal 3
-// goal 4
-// goal 5
-// up, down, left, right
-
-// on DOM load
-// function run modal X
-// display modal X
-// listen for submit click X
-// store seed input value in seed variable X
-// hide modal X
-
-
-// setup game ()
-// run modal()
-
-// function setup game
-
-// define robot templates ()
-// make robots ()
-// create character template ()
-// make robots ()
-
-//define robot templates:
-// GET request(s) to robots/seed - 1 for character, 2 for monster types
-// define robots objects
-// define character object
-
-// make robots
-// generate 1robot() every x seconds, 5 times -- row 1 & 3
-// generate 1robot() type 2 every x seconds, 5 times - row 2
-// generate character();
-
-
-//generate 1 robot:
-// set properties
-// set speed & movement, start over
-
-//generate character:
-// set properties
-// set movement to equal key values
-
-//listen for key values after game setup
-
-// every time robot moves
-// check if robot left, right, top, bottom coordinates match character
-// lives --
-// if lives = 0
-// alert modal - out of lives!
-// start button - direct back to index/reload page
-// move character back to beginning
-
-// every time character moves
-// check if character left, right, top, bottom coordinates match goal
-// leave a character or star etc in goal
-// update goal array
-// if goal array = full
-// alert modal - you win!
-// start button - direct back to index/reload page
-// move character back to beginning
-//back to beginning
-//caracter back to beginning
-//back to beginning
-// array of goals
-// goal 1
-// goal 2
-// goal 3
-// goal 4
-// goal 5
-// up, down, left, right
-
-// on DOM load
-// function run modal X
-// display modal X
-// listen for submit click X
-// store seed input value in seed variable X
-// hide modal X
-
-
-// setup game ()
-// run modal()
-
-// function setup game
-
-// define robot templates ()
-// make robots ()
-// create character template ()
-// make robots ()
-
-//define robot templates:
-// GET request(s) to robots/seed - 1 for character, 2 for monster types
-// define robots objects
-// define character object
-
-// make robots
-// generate 1robot() every x seconds, 5 times -- row 1 & 3
-// generate 1robot() type 2 every x seconds, 5 times - row 2
-// generate character();
-
-
-//generate 1 robot:
-// set properties
-// set speed & movement, start over
-
-//generate character:
-// set properties
-// set movement to equal key values
-
-//listen for key values after game setup
-
-// every time robot moves
-// check if robot left, right, top, bottom coordinates match character
-// lives --
-// if lives = 0
-// alert modal - out of lives!
-// start button - direct back to index/reload page
-// move character back to beginning
-
-// every time character moves
-// check if character left, right, top, bottom coordinates match goal
-// leave a character or star etc in goal
-// update goal array
-// if goal array = full
-// alert modal - you win!
-// start button - direct back to index/reload page
-// move character back to beginning
-//back to beginning
-//caracter back to beginning
-//back to beginning
-// right, top, bottom coordinates match character
-// lives --
-// if lives = 0
-// alert modal - out of lives!
-// start button - direct back to index/reload page
-// move character back to beginning
-
-// every time character moves
-// check if character left, right, top, bottom coordinates match goal
-// leave a character or star etc in goal
-// update goal array
-// if goal array = full
-// alert modal - you win!
-// start button - direct back to index/reload page
-// move character back to beginning
-//back to beginning
-//caracter back to beginning
-//back to beginning
-// array of goals
-// goal 1
-// goal 2
-// goal 3
-// goal 4
-// goal 5
-// up, down, left, right
-
-// on DOM load
-// function run modal X
-// display modal X
-// listen for submit click X
-// store seed input value in seed variable X
-// hide modal X
-
-
-// setup game ()
-// run modal()
-
-// function setup game
-
-// define robot templates ()
-// make robots ()
-// create character template ()
-// make robots ()
-
-//define robot templates:
-// GET request(s) to robots/seed - 1 for character, 2 for monster types
-// define robots objects
-// define character object
-
-// make robots
-// generate 1robot() every x seconds, 5 times -- row 1 & 3
-// generate 1robot() type 2 every x seconds, 5 times - row 2
-// generate character();
-
-
-//generate 1 robot:
-// set properties
-// set speed & movement, start over
-
-//generate character:
-// set properties
-// set movement to equal key values
-
-//listen for key values after game setup
-
-// every time robot moves
-// check if robot left, right, top, bottom coordinates match character
-// lives --
-// if lives = 0
-// alert modal - out of lives!
-// start button - direct back to index/reload page
-// move character back to beginning
-
-// every time character moves
-// check if character left, right, top, bottom coordinates match goal
-// leave a character or star etc in goal
-// update goal array
-// if goal array = full
-// alert modal - you win!
-// start button - direct back to index/reload page
-// move character back to beginning
-//back to beginning
-//caracter back to beginning
-//back to beginning
