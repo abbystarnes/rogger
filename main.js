@@ -58,13 +58,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       defineCharacter();
       makeCharacters();
-      defineRobots(1, 200, 0);
-      defineRobots(3, 400, 1);
+      defineRobots(1, 100, 0, 1);
+      defineRobots(2, 200, 1, -1);
+      defineRobots(1, 400, 2, 1);
+      defineRobots(2, 500, 3, -1);
       makeRobots();
       setup = true;
    }
 
-   function defineRobots(set, row, counter) {
+   function defineRobots(set, row, counter, speed) {
 
       for (let x = 0; x < 4; x++) {
          let offset = 300 * x;
@@ -80,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             let robotPos = offset;
             robot.className += ` robot${x}`;
 
-            function moveRobot() {
+            function moveRobot(myParam) {
                robotPos = robotPos + 1;
 
                robot.style.left = robotPos + "px";
@@ -96,7 +98,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             };
             offset = offset + 100;
-            moveRobot();
+            // let james = 0;
+            // if (counter % 2 === 0) {
+            //    james = 1;
+            // }
+            // if (counter % 2 !== 0) {
+            //    james = (-1);
+            // }
+
+            moveRobot(speed);
 
 
 
