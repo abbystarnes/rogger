@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let robotTop = '';
    let setup = false;
    let lives = 3;
+
    // check goal
    //  for (let x = 0; x < goals.length; x++){
    //
@@ -57,14 +58,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       defineCharacter();
       makeCharacters();
-      defineRobots(2, 200);
+      defineRobots(1, 200, 0);
+      defineRobots(3, 400, 1);
       makeRobots();
       setup = true;
    }
 
-   function defineRobots(set, row) {
+   function defineRobots(set, row, counter) {
+
       for (let x = 0; x < 4; x++) {
          let offset = 300 * x;
+
          setTimeout(function() {
             // console.log('robots');
             let robot = document.createElement('div');
@@ -74,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             robot.style.left = -150 + 'px';
             robot.style.bottom = `${row}px`;
             let robotPos = offset;
-            robot.id = `robot${x}`;
+            robot.className += ` robot${x}`;
 
             function moveRobot() {
-               robotPos = robotPos + 2;
+               robotPos = robotPos + 1;
 
                robot.style.left = robotPos + "px";
 
@@ -88,12 +92,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
                }
 
                requestAnimationFrame(moveRobot);
-               //  console.log('about to run collision');
-               checkCollision();
+               checkCollision(counter);
 
             };
             offset = offset + 100;
             moveRobot();
+
 
 
          }, 3000);
@@ -223,13 +227,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log('lives left:', lives);
    }
 
-   function checkCollision() {
-      // console.log('collision test running');
+   function checkCollision(param1) {
 
-      for (let y = 0; y < 5; y++) {
 
+      for (let y = 0; y < 4; y++) {
          let robotName = 'robot' + (y);
-         robot1 = document.getElementById(`${robotName}`);
+         //  console.log(robotName, 'rb name');
+         //  console.log(param1, 'index');
+         robot1 = document.getElementsByClassName(`${robotName}`)[param1];
+         //  console.log(robot1);
+         //  console.log(robot1, 'robot by class array');
+         //  console.log(param1, 'param1');
+         //  let robotName = 'robot' + (y);
+         //  robot1 = document.getElementsByClassName(`${robotName}`)[param1];
+         //  console.log(robot1);
          //  myRobot = document.getElementById(`${robotName}`);
 
          if (robot1) {
