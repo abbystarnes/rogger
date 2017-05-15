@@ -20,7 +20,8 @@
   border: 1px solid black;
   background-color: white;
   left: calc(50% - 275px);
-  top: calc(50% - 175px); }
+  top: calc(50% - 175px);
+  z-index: 5; }
 
 .goals {
   display: flex;
@@ -35,8 +36,8 @@
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: blue; }
+  background-size: cover;
+  border: 2px solid pink; }
 
 .win {
   background-color: gold; }
@@ -45,7 +46,7 @@
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: grey; }
+  background-size: cover;
+  background-color: white; }
 
 /*# sourceMappingURL=main.css.map */

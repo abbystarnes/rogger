@@ -26,6 +26,7 @@ $selago: #E5EDFB;
   background-color: white;
   left: calc(50% - 275px);
   top: calc(50% - 175px);
+  z-index: 5;
 }
 
 .goals {
@@ -43,8 +44,8 @@ $selago: #E5EDFB;
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: blue;
+  background-size: cover;
+  border: 2px solid pink;
 }
 
 .win {
@@ -55,6 +56,6 @@ $selago: #E5EDFB;
   position: absolute;
   height: 100px;
   width: 100px;
-  background-size: contain;
-  background-color: grey;
+  background-size: cover;
+  background-color: white;
 }

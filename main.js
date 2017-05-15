@@ -21,10 +21,63 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let robotTop = '';
    let setup = false;
    let lives = 3;
+   let played = false;
 
+
+   function makeModalRestart() {
+      character.style.display = 'none';
+      if (played) {
+         let myForm = document.getElementsByTagName('form')[0];
+         myForm.remove();
+      }
+      form = document.createElement('form');
+      let restart = document.createElement('input');
+      restart.setAttribute('id', 'restart');
+      restart.type = 'submit';
+      restart.value = 'click to restart game';
+      form.append(restart);
+      modal.append(form);
+      modal.style.display = 'block';
+      restart.addEventListener("click", function(event) {
+         //  event.preventDefault();
+         //  seed = seedInput.value;
+         //  console.log(seed);
+         //  modal.style.display = 'none';
+         //  setupGame();
+      });
+
+   }
+
+   function makeModalWin() {
+      character.style.display = 'none';
+      if (played) {
+         let myForm = document.getElementsByTagName('form')[0];
+         myForm.remove();
+      }
+      form = document.createElement('form');
+      let newLevel = document.createElement('input');
+      let celebrate = document.createElement('p');
+      newLevel.setAttribute('id', 'newLevel');
+      newLevel.type = 'submit';
+      newLevel.value = 'continue';
+      celebrate.innerHTML = 'continue to next level!';
+      form.append(celebrate);
+      form.append(newLevel);
+      modal.append(form);
+      modal.style.display = 'block';
+      restart.addEventListener("click", function(event) {
+         //  event.preventDefault();
+         //  seed = seedInput.value;
+         //  console.log(seed);
+         //  modal.style.display = 'none';
+         //  setupGame();
+      });
+
+   }
 
    function makeModal() {
-      let form = document.createElement('form');
+      played = true;
+      form = document.createElement('form');
       let seedInput = document.createElement('input');
       let seedLabel = document.createElement('label');
       let submit = document.createElement('input');
@@ -44,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
          setupGame();
       });
    }
-
    makeModal();
 
    function setupGame() {
@@ -160,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             characterPosVert = 0;
             characterPosHoriz = 500;
             goals[0].className += ' win';
+            goalScore[0] = 1;
          } else if (characterPosHoriz > 120 && characterPosHoriz <= 340) {
             console.log('you win in goal 2!');
             character.style.bottom = '0px';
@@ -167,6 +220,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             characterPosVert = 0;
             characterPosHoriz = 500;
             goals[1].className += ' win';
+            goalScore[1] = 1;
          } else if (characterPosHoriz > 340 && characterPosHoriz <= 560) {
             console.log('you win in goal 3!');
             character.style.bottom = '0px';
@@ -174,6 +228,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             characterPosVert = 0;
             characterPosHoriz = 500;
             goals[2].className += ' win';
+            goalScore[2] = 1;
          } else if (characterPosHoriz > 560 && characterPosHoriz < 780) {
             console.log('you win in goal 4!');
             character.style.bottom = '0px';
@@ -181,6 +236,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             characterPosVert = 0;
             characterPosHoriz = 500;
             goals[3].className += ' win';
+            goalScore[3] = 1;
          } else {
             console.log('you win in goal 5!');
             character.style.bottom = '0px';
@@ -188,9 +244,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
             characterPosVert = 0;
             characterPosHoriz = 500;
             goals[4].className += ' win';
+            goalScore[4] = 1;
          }
+         if ((goalScore[0] === 1) && (goalScore[1] === 1) && (goalScore[2] === 1) && (goalScore[3] === 1) && (goalScore[4] === 1)) {
+            console.log('you win it all!');
+            makeModalWin();
+         }
+
       }
    }
+
 
    function checkKey(e) {
       // console.log('checking key');
@@ -229,6 +292,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       characterPosHoriz = 500;
       lives--;
       console.log('lives left:', lives);
+      if (lives === 0) {
+         console.log(' out of lives!');
+         makeModalRestart();
+      }
    }
 
    function checkCollision(param1, param2) {
