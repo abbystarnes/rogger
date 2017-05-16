@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let modalText = document.getElementById('modalText');
    let modal = document.getElementById('modal');
    let seed = '';
+   const rows = 10;
 
    // KEEP TRACK OF WINS/LOSSES
    let outcome = 'default';
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    const character = document.getElementById('character');
 
    // GET IMAGES
-   function getImages() {
+   function setImages(param1) {
       var xhr = new XMLHttpRequest();
       var url = '';
       xhr.responseType = 'arraybuffer';
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
          console.log(blb, 'blb');
          url = window.URL.createObjectURL(blb);
          console.log(url, 'url');
+         param1.style.backgroundImage = `url(${url})`;
       }
 
       xhr.open('GET', `http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}`);
@@ -55,10 +57,41 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
    // CREATE PLAYER
    function createPlayer() {
-      console.log('ran');
-      let imageURL = getImages();
-      character.style.backgroundImage = `url(${imageURL})`;
+      setImages(character);
    }
+
+   let botTypeA = {
+      "numBots": "300px",
+      "velocity": 1,
+      "set": 3,
+      "numBots": 5
+   }
+   // how can I make this more dynamic? an object with arrays of options, randomize?
+   let botTypeB = {
+      "spacing": "390px",
+      "velocity": -2,
+      "set": 2,
+      "numBots": 4
+   }
+
+   function createBots() {
+      for (let x = 0; x < rows; x++) {
+
+      }
+      //  set distance between
+      //  create robot div
+      //  add class robot
+      //  set background image << http response var(s)
+      //  * set robot left & bottom offset
+      //  set robot position to offset (space between * index of monster)
+      //  append robot
+      //  set robot classname by index: robot1, robot2, etc (for looping through robots in collide check << probably unnecessary << just get all by class robot and apply in a loop?)
+   }
+
+   function createGame() {
+      createPlayer();
+   }
+
 
    // SET UP MODAL
    function setModal() {
@@ -71,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             event.preventDefault();
             seed = getSeed.value;
             console.log(seed, 'seed');
-            createPlayer();
+            createGame();
          }
          modal.classList.add('hidden');
       });
