@@ -27,11 +27,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let modalText = document.getElementById('modalText');
    let modal = document.getElementById('modal');
    let seed = '';
-   const rows = 10;
+   let level = 0;
+   let botOptions = [1, 2, 3];
 
    // KEEP TRACK OF WINS/LOSSES
    let outcome = 'default';
-
    // CREATE PLAYER & BOTS
    const character = document.getElementById('character');
 
@@ -44,9 +44,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
          var blb = new Blob([xhr.response], {
             type: 'image/png'
          });
-         console.log(blb, 'blb');
          url = window.URL.createObjectURL(blb);
-         console.log(url, 'url');
          param1.style.backgroundImage = `url(${url})`;
       }
 
@@ -60,23 +58,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       setImages(character);
    }
 
-   let botTypeA = {
-      "numBots": "300px",
-      "velocity": 1,
-      "set": 3,
-      "numBots": 5
-   }
-   // how can I make this more dynamic? an object with arrays of options, randomize?
-   let botTypeB = {
-      "spacing": "390px",
-      "velocity": -2,
-      "set": 2,
-      "numBots": 4
-   }
-
    function createBots() {
-      for (let x = 0; x < rows; x++) {
+      for (let z = 0; z < botOptions.length; z++) {
 
+      }
+      let numRows = levels[level].length;
+      for (let x = 0; x < numRows; x++) {
+         let row = levels[level][x];
+         let botsPerRow = row.botPicks.length;
+         for (let y = 0; y < botsPerRow; y++) {
+            let bot = document.createElement('div');
+            bot.className = 'bot';
+
+         }
       }
       //  set distance between
       //  create robot div
@@ -90,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
    function createGame() {
       createPlayer();
+      createBots();
    }
 
 
