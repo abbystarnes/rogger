@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let setup = false;
    let lives = 3;
    let played = false;
+   let url = '';
 
 
    function makeModalRestart() {
@@ -121,7 +122,57 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             let robot = document.createElement('div');
             robot.className = 'robot';
-            robot.style.backgroundImage = `url(https://robohash.org/${seed}/?set=set${set})`;
+            robot.style.backgroundImage = `url(${url})`;
+            // /// GET ///////////////////
+            // var xhr = new XMLHttpRequest();
+            //
+            // xhr.addEventListener('load', function() {
+            //    if (xhr.status !== 200) {
+            //       return;
+            //    }
+            //
+            //    var data = xhr.response;
+            //    var arr = new Uint8Array(data.data);
+            //    var raw = String.fromCharCode.apply(null, arr);
+            //    var b64 = btoa(raw);
+            //    map.src = 'data:image/png;base64,' + b64;
+            //    console.log(data);
+            // });
+            //
+            // xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/53df');
+            // xhr.send();
+
+
+
+
+
+            //
+            // var oReq = new XMLHttpRequest();
+            // oReq.open("GET", "/myfile.png", true);
+            // oReq.responseType = "arraybuffer";
+            //
+            // oReq.onload = function(oEvent) {
+            //    var blob = new Blob([oReq.response], {
+            //       type: "image/png"
+            //    });
+            //    // ...
+            // };
+
+            // oReq.send();
+            // var oReq = new XMLHttpRequest();
+            // oReq.open("post", '/somelocation/getmypic', true);
+            // oReq.responseType = "blob";
+            // oReq.onload = function(oEvent) {
+            //    var blob = oReq.response;
+            //    var imgSrc = URL.createObjectURL(blob);
+            //    var $img = $('<img/>', {
+            //       "alt": "test image",
+            //       "src": imgSrc
+            //    }).appendTo($('#bb_theImageContainer'));
+            //    window.URL.revokeObjectURL(imgSrc);
+            // };
+            // oReq.send(null);
+            ////////////////////////////
             container.append(robot);
 
             robot.style.left = -150 + 'px';
@@ -170,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       let character = document.createElement('div');
       character.id = 'character';
       character.className = 'character';
-      character.style.backgroundImage = `url(https://robohash.org/${seed}/?set=set3)`;
+      character.style.backgroundImage = `url(${url})`;
       container.append(character);
       character.style.left = characterPosHoriz + 'px';
       character.style.bottom = characterPosVert + 'px';
@@ -324,4 +375,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       }
    }
+
+
+
+
+
+   var xhr = new XMLHttpRequest();
+   xhr.responseType = 'arraybuffer';
+   xhr.onload = function() {
+      var blb = new Blob([xhr.response], {
+         type: 'image/png'
+      });
+      console.log(blb, 'blb');
+      url = window.URL.createObjectURL(blb);
+      console.log(url, 'url');
+   }
+
+   xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/53df');
+   xhr.send();
 });
