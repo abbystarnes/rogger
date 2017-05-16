@@ -1,371 +1,206 @@
-// HTML & CSS
-// empty game div -- maybe graphics - goals, start area, highway lanes (background image w/actual goals??)
-// modal with form, seed input, submit,
+/*
+bugs:
+  - collision w/same top & bottom << or top & bottom equal *
+  - pick square images/full width & height
+  - create space between goals << just make divs smaller, check for frogger at them. how to keep frogger off margins? position him relative?
+  - why are lives decrementing when moving player under 0? bc not touching/bordering a monster
+
+changes:
+  - make everything half scale
+  - create goal counter
+  - make robots smaller than row
+  - make robots and player different sizes?
+
+extras:
+ - add log/water collision logic
+ - customize images > custom api
+*/
+
+// LOAD DOM
 document.addEventListener("DOMContentLoaded", function(event) {
-   // global vars
-   let container = document.getElementById('container');
+   // GLOBAL VARIABLES
+
+   // MODAL
+   const submit = document.getElementById('submit');
+   const getSeed = document.getElementById('getSeed');
+   const getSeedLabel = document.getElementById('getSeedLabel');
+   let modalText = document.getElementById('modalText');
    let modal = document.getElementById('modal');
    let seed = '';
-   let characterPosHoriz = 500;
-   let characterPosVert = 0;
-   let goalScore = [0, 0, 0, 0, 0];
-   let goals = document.getElementsByClassName('goal');
-   let robot1 = document.getElementById('robot1');
-   let charLeft = '';
-   let charRight = '';
-   let charTop = '';
-   let charBottom = '';
-   let robotLeft = '';
-   let robotRight = '';
-   let robotBottom = '';
-   let robotTop = '';
-   let setup = false;
-   let lives = 3;
-   let played = false;
-   let url = '';
-   var logs = document.getElementsByClassName('water');
-   console.log(logs, 'logs');
 
+   // KEEP TRACK OF WINS/LOSSES
+   let outcome = 'default';
 
-   function makeModalRestart() {
-      character.style.display = 'none';
-      if (played) {
-         let myForm = document.getElementsByTagName('form')[0];
-         myForm.remove();
-      }
-      form = document.createElement('form');
-      let restart = document.createElement('input');
-      restart.setAttribute('id', 'restart');
-      restart.type = 'submit';
-      restart.value = 'click to restart game';
-      form.append(restart);
-      modal.append(form);
-      modal.style.display = 'block';
-      restart.addEventListener("click", function(event) {});
+   // CREATE PLAYER & BOTS
+   const character = document.getElementById('character');
 
-   }
-
-   function makeModalWin() {
-      character.style.display = 'none';
-      if (played) {
-         let myForm = document.getElementsByTagName('form')[0];
-         myForm.remove();
-      }
-      form = document.createElement('form');
-      let newLevel = document.createElement('input');
-      let celebrate = document.createElement('p');
-      newLevel.setAttribute('id', 'newLevel');
-      newLevel.type = 'submit';
-      newLevel.value = 'continue';
-      celebrate.innerHTML = 'continue to next level!';
-      form.append(celebrate);
-      form.append(newLevel);
-      modal.append(form);
-      modal.style.display = 'block';
-      restart.addEventListener("click", function(event) {
-         //  event.preventDefault();
-         //  seed = seedInput.value;
-         //  console.log(seed);
-         //  modal.style.display = 'none';
-         //  setupGame();
-      });
-
-   }
-
-   function makeModal() {
-      played = true;
-      form = document.createElement('form');
-      let seedInput = document.createElement('input');
-      let seedLabel = document.createElement('label');
-      let submit = document.createElement('input');
-      seedInput.setAttribute('id', 'seed');
-      seedLabel.htmlFor = 'seed';
-      seedLabel.innerHTML = 'Please submit a seed:'
-      submit.type = 'submit';
-      form.append(seedLabel);
-      form.append(seedInput);
-      form.append(submit);
-      modal.append(form);
-      submit.addEventListener("click", function(event) {
-         event.preventDefault();
-         seed = seedInput.value;
-         console.log(seed);
-         modal.style.display = 'none';
-         setupGame();
-      });
-   }
-   makeModal();
-
-   function setupGame() {
-
-      defineCharacter();
-      makeCharacters();
-      defineRobots(1, 100, 0, 1, 4, 300);
-      defineRobots(2, 200, 1, -2, 3, 390);
-      defineRobots(1, 400, 2, 1, 4, 300);
-      defineRobots(2, 500, 3, -2, 3, 390);
-      makeRobots();
-      setup = true;
-   }
-
-   function defineRobots(set, row, counter, speed, number, between) {
-      console.log(speed, 'speed');
-      for (let x = 0; x < number; x++) {
-         let offset = between * x;
-
-
-         // console.log('robots');
-
-         let robot = document.createElement('div');
-         robot.className = 'robot';
-         if (x === 2 || x === 3) {
-            robot.className += ' water';
-         }
-         robot.style.backgroundImage = `url(${url})`;
-         // /// GET ///////////////////
-
-
-         ////////////////////////////
-         container.append(robot);
-
-         robot.style.left = -150 + 'px';
-         robot.style.bottom = `${row}px`;
-         let robotPos = offset;
-         robot.className += ` robot${x}`;
-
-         function moveRobot() {
-            robotPos = robotPos + speed;
-
-            robot.style.left = robotPos + "px";
-
-
-
-            if (Math.abs(robotPos) >= 1100) {
-               robotPos = -150;
-            }
-
-            if ((robotPos) < -150) {
-               robotPos = 1100;
-            }
-
-
-            requestAnimationFrame(moveRobot);
-            checkCollision(counter, number);
-
-         };
-         offset = offset + 100;
-
-
-         moveRobot();
-
-
-
+   // GET IMAGES
+   function getImages() {
+      var xhr = new XMLHttpRequest();
+      var url = '';
+      xhr.responseType = 'arraybuffer';
+      xhr.onload = function() {
+         var blb = new Blob([xhr.response], {
+            type: 'image/png'
+         });
+         console.log(blb, 'blb');
+         url = window.URL.createObjectURL(blb);
+         console.log(url, 'url');
       }
 
+      xhr.open('GET', `http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}`);
+      xhr.send();
+      return url;
    }
 
-
-
-   function defineCharacter() {
-      // console.log('characters');
-      let character = document.createElement('div');
-      character.id = 'character';
-      character.className = 'character';
-      character.style.backgroundImage = `url(${url})`;
-      container.append(character);
-      character.style.left = characterPosHoriz + 'px';
-      character.style.bottom = characterPosVert + 'px';
-
-      // move user
-
-
+   // CREATE PLAYER
+   function createPlayer() {
+      console.log('ran');
+      let imageURL = getImages();
+      character.style.backgroundImage = `url(${imageURL})`;
    }
 
-   document.onkeydown = checkKey;
-   let u = +25;
-   let d = -25;
-   let l = -25;
-   let r = +25;
-
-   function move(direction) {
-
-      if (direction === 'up') {
-         characterPosVert = characterPosVert + u;
-         character.style.bottom = characterPosVert + 'px';
-      } else if (direction === 'down') {
-         characterPosVert = characterPosVert + d;
-         character.style.bottom = characterPosVert + 'px';
-      } else if (direction === 'left') {
-         characterPosHoriz = characterPosHoriz + l;
-         character.style.left = characterPosHoriz + 'px';
-      } else {
-         characterPosHoriz = characterPosHoriz + r;
-         character.style.left = characterPosHoriz + 'px';
-      }
-
-
-
-      if (characterPosVert >= 600) {
-         if (characterPosHoriz <= 120) {
-            console.log('you win in goal 1!');
-            character.style.bottom = '0px';
-            character.style.left = '500px';
-            characterPosVert = 0;
-            characterPosHoriz = 500;
-            goals[0].className += ' win';
-            goalScore[0] = 1;
-         } else if (characterPosHoriz > 120 && characterPosHoriz <= 340) {
-            console.log('you win in goal 2!');
-            character.style.bottom = '0px';
-            character.style.left = '500px';
-            characterPosVert = 0;
-            characterPosHoriz = 500;
-            goals[1].className += ' win';
-            goalScore[1] = 1;
-         } else if (characterPosHoriz > 340 && characterPosHoriz <= 560) {
-            console.log('you win in goal 3!');
-            character.style.bottom = '0px';
-            character.style.left = '500px';
-            characterPosVert = 0;
-            characterPosHoriz = 500;
-            goals[2].className += ' win';
-            goalScore[2] = 1;
-         } else if (characterPosHoriz > 560 && characterPosHoriz < 780) {
-            console.log('you win in goal 4!');
-            character.style.bottom = '0px';
-            character.style.left = '500px';
-            characterPosVert = 0;
-            characterPosHoriz = 500;
-            goals[3].className += ' win';
-            goalScore[3] = 1;
+   // SET UP MODAL
+   function setModal() {
+      submit.addEventListener('click', function(event) {
+         if (outcome === 'win') {
+            // restart
+         } else if (outcome === 'loss') {
+            // restart
          } else {
-            console.log('you win in goal 5!');
-            character.style.bottom = '0px';
-            character.style.left = '500px';
-            characterPosVert = 0;
-            characterPosHoriz = 500;
-            goals[4].className += ' win';
-            goalScore[4] = 1;
+            event.preventDefault();
+            seed = getSeed.value;
+            console.log(seed, 'seed');
+            createPlayer();
          }
-         if ((goalScore[0] === 1) && (goalScore[1] === 1) && (goalScore[2] === 1) && (goalScore[3] === 1) && (goalScore[4] === 1)) {
-            console.log('you win it all!');
-            makeModalWin();
-         }
-
-      }
-   }
-
-
-   function checkKey(e) {
-      // console.log('checking key');
-      e = e || window.event;
-      let direction = '';
-      if (e.keyCode == '38') {
-         //  console.log('going up');
-         move('up');
-      } else if (e.keyCode == '40') {
-         // down arrow
-         //  console.log('down');
-         move('down');
-      } else if (e.keyCode == '37') {
-         // left arrow
-         move('left');
-      } else if (e.keyCode == '39') {
-         // right arrow
-         move('right');
-      }
-
-   }
-
-   function makeRobots() {
-      // console.log('make r');
-   }
-
-   function makeCharacters() {
-      // console.log('make c');
-   }
-
-   function collide() {
-      console.log('oh no!');
-      character.style.bottom = '0px';
-      character.style.left = '500px';
-      characterPosVert = 0;
-      characterPosHoriz = 500;
-      lives--;
-      console.log('lives left:', lives);
-      if (lives === 0) {
-         console.log(' out of lives!');
-         makeModalRestart();
-      }
-   }
-
-   function checkCollision(param1, param2) {
-
-
-      charLeft = parseInt((character.style.left).match(/[0-9]+/));
-      charRight = (parseInt((character.style.left).match(/[0-9]+/)) + character.offsetWidth);
-      charBottom = parseInt((character.style.bottom).match(/[0-9]+/));
-      charTop = (parseInt((character.style.bottom).match(/[0-9]+/)) + character.offsetHeight);;
-
-
-      // if (charBottom >= 400) {
-      //    let drowning = true;
-      //    for (let p = 0; p < logs.length; p++) {
-      //
-      //       robotLeft = parseInt((logs[p].style.left).match(/[0-9]+/));
-      //       robotRight = (parseInt((logs[p].style.left).match(/[0-9]+/)) + logs[p].offsetWidth);
-      //       robotBottom = parseInt((logs[p].style.bottom).match(/[0-9]+/));
-      //       robotTop = (parseInt((logs[p].style.bottom).match(/[0-9]+/)) + logs[p].offsetHeight);
-      //
-      //       if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
-      //          drowning = false;
-      //       } else if ((charBottom === robotBottom) && (charTop === robotTop) && (charLeft === robotLeft) && (charRight === robotRight)) {
-      //          drowning = false;
-      //       }
-      //    }
-      //    if (drowning) {
-      //       console.log('fell in water!');
-      //       collide();
-      //    }
-      // } else {
-
-
-      for (let y = 0; y < param2; y++) {
-         if (robot1) {
-            let robotName = 'robot' + (y);
-            robot1 = document.getElementsByClassName(`${robotName}`)[param1];
-            robotLeft = parseInt((robot1.style.left).match(/[0-9]+/));
-            robotRight = (parseInt((robot1.style.left).match(/[0-9]+/)) + robot1.offsetWidth);
-            robotBottom = parseInt((robot1.style.bottom).match(/[0-9]+/));
-            robotTop = (parseInt((robot1.style.bottom).match(/[0-9]+/)) + robot1.offsetHeight);
-
-
-
-            if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
-               console.log('collided!');
-               collide();
-            }
-         }
-
-         //  }
-      }
-   }
-
-
-
-
-
-   var xhr = new XMLHttpRequest();
-   xhr.responseType = 'arraybuffer';
-   xhr.onload = function() {
-      var blb = new Blob([xhr.response], {
-         type: 'image/png'
+         modal.classList.add('hidden');
       });
-      console.log(blb, 'blb');
-      url = window.URL.createObjectURL(blb);
-      console.log(url, 'url');
+
+      if (outcome === 'win') {
+         stopMovement();
+         modalText.innerHTML = 'Continue to next level!';
+         submit.value = 'continue';
+         getSeed.classList.add('hidden');
+         getSeedLabel.classList.add('hidden');
+      } else if (outcome === 'loss') {
+         stopMovement();
+         modalText.innerHTML = 'Oh no! You\'re out of lives!';
+         submit.value = 'restart';
+         getSeed.classList.add('hidden');
+         getSeedLabel.classList.add('hidden');
+      }
    }
 
-   xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/53df');
-   xhr.send();
-});;
+   // STOP GAME
+   function stopMovement() {
+      // stop player & monster movement on loss/win
+   }
+
+   setModal();
+
+
+
+
+
+   // MAKE CREATING PLAYER AND BOTS A CALL BACK FUNCTION AFTER SUBMIT IS CLICKED & IMAGES ARE LOADED
+   //  createPlayer();
+
+
+});
+
+
+
+/*
+global vars - seed, robot pos, player pos
+new game modal -- seed
+reset game/loss modal
+win/next level modal
+
+GET png request(s) -- seed
+
+define robots
+move robots - direction/speed
+define character
+set character controls
+move character
+check collision
+check win
+
+set water rows
+*/
+
+
+/*
+load
+restart modal
+win modal
+modal  <- modal(start/win/restart)
+robot vars - distance between, offset, speed
+
+// on load submit load icon, on make characters/robots, setup game (if lag)
+
+setup game (on http requests complete <- need #image types ahead of time)
+  * do I need this in a function? just wait for load? *
+  make character
+  get level - sets robot variables
+    make robots (image set, bottom offset, index, speed/direction, #monsters, distance between)
+    ^ make distance between calc based on #monsters; need index?; try to call only once
+
+define robots
+  for #robots
+    set distance between
+    create robot div
+    add class robot
+    set background image << http response var(s)
+    * set robot left & bottom offset
+    set robot position to offset (space between * index of monster)
+    append robot
+    set robot classname by index: robot1, robot2, etc (for looping through robots in collide check << probably unnecessary << just get all by class robot and apply in a loop?)
+
+    declare move robot () << move out?!
+      increment robot position
+      update left position of robot
+      if robot reaches end in either direction, reset to beginning
+      request animation frame
+      check collision() << move out?! could loop through all continually/while game running do this, or by row frog is in // only check once robots = true (looping through existing should take care of this? get array of robots once define is complete/true)
+
+    move robot()
+
+define character (player)
+      make
+      give id, class, background image (http GET url)
+      * set position left & bottom
+      append
+
+ keydown listener
+ check key ()
+
+ global vars for u,d,l,r (move up to top)
+
+ move player()
+  for each direction, move character position < change to object literal, run once? object: keycode, direction name, +/- #pixels to move
+  check goals for win // change to only runs on character pos = goal,  height < change to object literal
+    ^ make this cleaner - margins between goals, clear win/loss < change 1 hop to be 1 whole box?
+      if goal, reset character position << break out into function, update goals
+        if all goals, display win modal, update level
+
+  collided
+    alert user
+    reset character position (put a delay on this?, maybe combined with alerting user - toast?)
+    decrement lives
+    if no more lives
+      run restart modal
+
+  check collision (robot class name, number of robot rows << don't need if getting all and looping through all)
+        set value of player & robot borders (l,r,t,b)
+
+        if player is on water row (top & bottom within water row ranges)
+          collision is when player is NOT touching a robot < rename check death, element
+        check collision function or (!collision function, if player in water row) << need to update to fix sneaking through aligned bug
+          if collision, run collide()
+
+  GET requests currently at bottom, move up
+*/
+
+//* BONUS: python firebase api from robohash template w/custom images < THURS
+// THURS
