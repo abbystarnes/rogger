@@ -18,8 +18,10 @@ extras:
 
 // LOAD DOM
 document.addEventListener("DOMContentLoaded", function(event) {
-   // GLOBAL VARIABLES
 
+   // GLOBAL VARIABLES
+   let container = document.getElementById('container');
+   let width = 430; //width of game screen
    // MODAL
    const submit = document.getElementById('submit');
    const getSeed = document.getElementById('getSeed');
@@ -27,12 +29,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let modalText = document.getElementById('modalText');
    let modal = document.getElementById('modal');
    let seed = '';
+   // LEVEL GENERATION
    let level = 0;
    let botOptions = [1, 2, 3];
    let botOptionIMGS = [];
    let url = '';
-   let container = document.getElementById('container');
-   let width = 430;
    // PLAYER CONTROLS
    let u = +25;
    let d = -25;
@@ -42,13 +43,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let outcome = 'default';
    // CREATE PLAYER & BOTS
    const player = document.getElementById('player');
+   // MOVEMENT && SCORING
+   let playerPosHoriz = 190;
+   let playerPosVert = 0;
+   let goalScore = [0, 0, 0, 0, 0];
+   let goals = document.getElementsByClassName('goal');
 
+
+   // RESULT OF COLLISION
    function collide() {
       console.log('oh no!');
       player.style.bottom = '0px';
-      player.style.left = '500px';
+      player.style.left = '190px';
       playerPosVert = 0;
-      playerPosHoriz = 500;
+      playerPosHoriz = 190;
       lives--;
       console.log('lives left:', lives);
       if (lives === 0) {
@@ -57,27 +65,124 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
    }
 
-   function checkCollision(param1, param2) {
-      charLeft = parseInt((player.style.left).match(/[0-9]+/));
-      charRight = (parseInt((player.style.left).match(/[0-9]+/)) + player.offsetWidth);
-      charBottom = parseInt((player.style.bottom).match(/[0-9]+/));
-      charTop = (parseInt((player.style.bottom).match(/[0-9]+/)) + player.offsetHeight);;
-      let bots = document.getElementsByClassName('bot');
-      for (let x = 0; x < bots.length; x++) {
-         robotLeft = parseInt((bots[x].style.left).match(/[0-9]+/));
-         robotRight = (parseInt((bots[x].style.left).match(/[0-9]+/)) + bots[x].offsetWidth);
-         robotBottom = parseInt((bots[x].style.bottom).match(/[0-9]+/));
-         robotTop = (parseInt((bots[x].style.bottom).match(/[0-9]+/)) + bots[x].offsetHeight);
+   /// CHECK USER INPUT
+   function checkKey(e) {
+      console.log('checking key');
+      e = e || window.event;
+      let direction = '';
+      if (e.keyCode == '38') {
+         //  console.log('going up');
+         move('up');
+      } else if (e.keyCode == '40') {
+         // down arrow
+         console.log('down');
+         move('down');
+      } else if (e.keyCode == '37') {
+         // left arrow
+         move('left');
+      } else if (e.keyCode == '39') {
+         // right arrow
+         move('right');
+      }
 
-         if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
-            console.log('collided!');
-            collide();
+   }
+
+   // MOVE playerfunction move(direction) {
+   function move(direction) {
+      if (direction === 'up') {
+         playerPosVert = playerPosVert + u;
+         player.style.bottom = playerPosVert + 'px';
+      } else if (direction === 'down') {
+         playerPosVert = playerPosVert + d;
+         player.style.bottom = playerPosVert + 'px';
+      } else if (direction === 'left') {
+         playerPosHoriz = playerPosHoriz + l;
+         player.style.left = playerPosHoriz + 'px';
+      } else {
+         playerPosHoriz = playerPosHoriz + r;
+         player.style.left = playerPosHoriz + 'px';
+      }
+
+
+
+      if (playerPosVert >= 600) {
+         if (playerPosHoriz <= 86) {
+            console.log('you win in goal 1!');
+            player.style.bottom = '0px';
+            player.style.left = '190px';
+            playerPosVert = 0;
+            playerPosHoriz = 190;
+            goals[0].className += ' win';
+            goalScore[0] = 1;
+         } else if (playerPosHoriz > 86 && playerPosHoriz <= 172) {
+            console.log('you win in goal 2!');
+            player.style.bottom = '0px';
+            player.style.left = '190px';
+            playerPosVert = 0;
+            playerPosHoriz = 190;
+            goals[1].className += ' win';
+            goalScore[1] = 1;
+         } else if (playerPosHoriz > 172 && playerPosHoriz <= 258) {
+            console.log('you win in goal 3!');
+            player.style.bottom = '0px';
+            player.style.left = '190px';
+            playerPosVert = 0;
+            playerPosHoriz = 190;
+            goals[2].className += ' win';
+            goalScore[2] = 1;
+         } else if (playerPosHoriz > 258 && playerPosHoriz < 344) {
+            console.log('you win in goal 4!');
+            player.style.bottom = '0px';
+            player.style.left = '190px';
+            playerPosVert = 0;
+            playerPosHoriz = 190;
+            goals[3].className += ' win';
+            goalScore[3] = 1;
+         } else {
+            console.log('you win in goal 5!');
+            player.style.bottom = '0px';
+            player.style.left = '190px';
+            playerPosVert = 0;
+            playerPosHoriz = 190;
+            goals[4].className += ' win';
+            goalScore[4] = 1;
+         }
+         if ((goalScore[0] === 1) && (goalScore[1] === 1) && (goalScore[2] === 1) && (goalScore[3] === 1) && (goalScore[4] === 1)) {
+            console.log('you win it all!');
+            // makeModalWin();
          }
 
       }
    }
 
 
+   // CHECK FOR COLLISION
+   //  console.log(player.style.left);
+
+   //  console.log(bots);
+
+   function checkCollision(param1) {
+      playerLeft = parseInt((player.style.left).match(/[0-9]+/));
+      // console.log(playerLeft);
+      playerRight = (parseInt((player.style.left).match(/[0-9]+/)) + player.offsetWidth);
+      playerBottom = parseInt((player.style.bottom).match(/[0-9]+/));
+      playerTop = (parseInt((player.style.bottom).match(/[0-9]+/)) + player.offsetHeight);
+
+
+      robotLeft = parseInt((param1.style.left).match(/[0-9]+/));
+      robotRight = (parseInt((param1.style.left).match(/[0-9]+/)) + param1.offsetWidth);
+      robotBottom = parseInt((param1.style.bottom).match(/[0-9]+/));
+      robotTop = (parseInt((param1.style.bottom).match(/[0-9]+/)) + param1.offsetHeight);
+
+      if ((((playerBottom < robotTop) && (playerBottom > robotBottom)) || ((playerTop > robotBottom) && (playerTop < robotTop)) || ((playerTop === robotTop) && (playerBottom === robotBottom))) && (((playerLeft > robotLeft) && (playerLeft < robotRight)) || ((playerRight > robotLeft) && (playerRight < robotRight)))) {
+         console.log('collided!');
+         collide();
+      }
+
+
+   }
+
+   // CREATE GAME ON SCREEN
    function createGame() {
 
       // CREATE PLAYER
@@ -87,8 +192,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       for (let x = 0; x < numRows; x++) {
          let row = levels[level][x];
          let botsPerRow = row.botPicks.length;
-         let offset = parseInt((530 - (50 * botsPerRow)) / botsPerRow);
-         console.log(offset);
+         let offset = parseInt((480 - (50 * botsPerRow)) / botsPerRow);
+         //  console.log(offset);
          for (let y = 0; y < botsPerRow; y++) {
             let bot = document.createElement('div');
             let set = levels[level][x].botPicks[y];
@@ -107,22 +212,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
             function moveBot() {
                botPosition = botPosition + row.velocity;
                bot.style.left = botPosition + 'px';
-               if (Math.abs(botPosition) >= 480) {
+               if (Math.abs(botPosition) >= 430) {
                   botPosition = -50;
                }
 
                if ((botPosition) < -50) {
-                  botPosition = 480;
+                  botPosition = 430;
                }
                requestAnimationFrame(moveBot);
-               checkCollision();
+               checkCollision(bot);
             }
             moveBot();
          }
       }
    }
 
-   //  document.onkeydown = checkKey;
+   document.onkeydown = checkKey;
 
 
 
