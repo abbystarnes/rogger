@@ -8,7 +8,7 @@ $selago: #E5EDFB;
 .container {
   width: 430px;
   margin: 0 auto;
-  height: 700px;
+  height: 650px;
   border: 1px solid black;
   position: relative;
   background-color: $selago;
@@ -41,7 +41,7 @@ $selago: #E5EDFB;
   border: 1px solid blue;
 }
 
-.character {
+.player {
   position: absolute;
   height: 50px;
   width: 50px;

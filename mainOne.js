@@ -300,36 +300,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
    }
 
    function checkCollision(param1, param2) {
-
-
       charLeft = parseInt((character.style.left).match(/[0-9]+/));
       charRight = (parseInt((character.style.left).match(/[0-9]+/)) + character.offsetWidth);
       charBottom = parseInt((character.style.bottom).match(/[0-9]+/));
       charTop = (parseInt((character.style.bottom).match(/[0-9]+/)) + character.offsetHeight);;
-
-
-      // if (charBottom >= 400) {
-      //    let drowning = true;
-      //    for (let p = 0; p < logs.length; p++) {
-      //
-      //       robotLeft = parseInt((logs[p].style.left).match(/[0-9]+/));
-      //       robotRight = (parseInt((logs[p].style.left).match(/[0-9]+/)) + logs[p].offsetWidth);
-      //       robotBottom = parseInt((logs[p].style.bottom).match(/[0-9]+/));
-      //       robotTop = (parseInt((logs[p].style.bottom).match(/[0-9]+/)) + logs[p].offsetHeight);
-      //
-      //       if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
-      //          drowning = false;
-      //       } else if ((charBottom === robotBottom) && (charTop === robotTop) && (charLeft === robotLeft) && (charRight === robotRight)) {
-      //          drowning = false;
-      //       }
-      //    }
-      //    if (drowning) {
-      //       console.log('fell in water!');
-      //       collide();
-      //    }
-      // } else {
-
-
       for (let y = 0; y < param2; y++) {
          if (robot1) {
             let robotName = 'robot' + (y);
@@ -344,8 +318,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                collide();
             }
          }
-
-         //  }
       }
    }
 
