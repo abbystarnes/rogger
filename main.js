@@ -40,14 +40,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let l = -25;
    let r = +25;
    // KEEP TRACK OF WINS/LOSSES
-   let outcome = 'default';
+   //  let outcome = 'default';
    // CREATE PLAYER & BOTS
    const player = document.getElementById('player');
    // MOVEMENT && SCORING
    let playerPosHoriz = 190;
    let playerPosVert = 0;
-   let goalScore = [0, 0, 0, 0, 0];
+   let goalScore = [1, 1, 0, 1, 1];
    let goals = document.getElementsByClassName('goal');
+   let lives = 3;
 
 
    // RESULT OF COLLISION
@@ -58,6 +59,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       playerPosVert = 0;
       playerPosHoriz = 190;
       lives--;
+      if (lives === 0) {
+         console.log('you lose');
+         setModal('loss');
+      }
       console.log('lives left:', lives);
       if (lives === 0) {
          console.log(' out of lives!');
@@ -149,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
          }
          if ((goalScore[0] === 1) && (goalScore[1] === 1) && (goalScore[2] === 1) && (goalScore[3] === 1) && (goalScore[4] === 1)) {
             console.log('you win it all!');
-            // makeModalWin();
+            setModal('win');
          }
 
       }
@@ -233,12 +238,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
    // SET UP MODAL
-   function setModal() {
+   function setModal(outcome) {
+      modal.classList.remove('hidden');
       submit.addEventListener('click', function(event) {
          if (outcome === 'win') {
             // restart
+            level++;
          } else if (outcome === 'loss') {
             // restart
+            location.reload();
          } else {
             event.preventDefault();
             seed = getSeed.value;
