@@ -29,39 +29,51 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let seed = '';
    let level = 0;
    let botOptions = [1, 2, 3];
+   let botOptionIMGS = [];
+   let url = '';
 
    // KEEP TRACK OF WINS/LOSSES
    let outcome = 'default';
    // CREATE PLAYER & BOTS
    const character = document.getElementById('character');
 
-   // GET IMAGES
-   function setImages(param1) {
-      var xhr = new XMLHttpRequest();
-      var url = '';
-      xhr.responseType = 'arraybuffer';
-      xhr.onload = function() {
-         var blb = new Blob([xhr.response], {
-            type: 'image/png'
-         });
-         url = window.URL.createObjectURL(blb);
-         param1.style.backgroundImage = `url(${url})`;
+
+
+   function createGame() {
+      // GET IMAGES
+      function setImages(arg1) {
+         var xhr = new XMLHttpRequest();
+         xhr.responseType = 'arraybuffer';
+         xhr.onload = function() {
+            var blb = new Blob([xhr.response], {
+               type: 'image/png'
+            });
+            url = window.URL.createObjectURL(blb);
+            botOptionIMGS[arg1] = `url(${url})`;
+         };
+
+         xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/gf');
+         xhr.send();
+      };
+      // + seed + "?set=set" + arg1
+      // CREATE PLAYER
+      for (let x = 0; x < botOptions.length; x++) {
+         console.log(x);
+         setImages(x);
       }
+      console.log(botOptionIMGS);
+      console.log(botOptionIMGS[0], '0th image');
+      character.style.backgroundImage = (botOptionIMGS[0]);
+      console.log(character.style.backgroundImage);
+      // console.log(myImage);
+      // character.style.backgroundImage = (myImage);
 
-      xhr.open('GET', `http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}`);
-      xhr.send();
-      return url;
-   }
 
-   // CREATE PLAYER
-   function createPlayer() {
-      setImages(character);
-   }
 
-   function createBots() {
-      for (let z = 0; z < botOptions.length; z++) {
-
-      }
+      // CREATE BOTS
+      // for (let z = 0; z < botOptions.length; z++) {
+      //    setImages(bot, botOptions[z]);
+      // }
       let numRows = levels[level].length;
       for (let x = 0; x < numRows; x++) {
          let row = levels[level][x];
@@ -72,19 +84,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
          }
       }
-      //  set distance between
-      //  create robot div
-      //  add class robot
-      //  set background image << http response var(s)
-      //  * set robot left & bottom offset
-      //  set robot position to offset (space between * index of monster)
-      //  append robot
-      //  set robot classname by index: robot1, robot2, etc (for looping through robots in collide check << probably unnecessary << just get all by class robot and apply in a loop?)
-   }
 
-   function createGame() {
-      createPlayer();
-      createBots();
+
+
+      console.log(seed, 'seed at create game');
    }
 
 
@@ -100,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             seed = getSeed.value;
             console.log(seed, 'seed');
             createGame();
+
          }
          modal.classList.add('hidden');
       });
