@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         container.append(ghost);
         bot.classList.add('zapped');
         player.classList.add('zapped');
+        console.log(bot,'hit bot');
         collide();
       }
    }
@@ -228,9 +229,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
          if (outcome === 'win') {
             level++;
             console.log(level, 'level');
-            let bots = container.getElementsByClassName('bot');
-            while (bots[0]) {
-                bots[0].parentNode.removeChild(bots[0]);
+            let bots = document.getElementsByClassName('bot');
+            let bots2 = Array.prototype.slice.call( bots );
+            for ( let x = 0; x < bots2.length; x++){
+              bots2[x].parentNode.removeChild(bots2[x]);
             }
             createGame();
          } else if (outcome === 'loss') {
