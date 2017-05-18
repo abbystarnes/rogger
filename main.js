@@ -21,9 +21,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let d = -25;
    let l = -25;
    let r = +25;
-   // CREATE PLAYER & BOTS
-   const player = document.getElementById('player');
-   player.style.left = '190px';
+
+
    // MOVEMENT && SCORING
    let playerPosHoriz = 190;
    let playerPosVert = 0;
@@ -31,14 +30,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let goals = document.getElementsByClassName('goal');
    let lives = 3;
 
+   // CREATE PLAYER & BOTS
+   const player = document.getElementById('player');
+   player.style.left = playerPosHoriz + 'px';
+
    // IF PLAYER TOUCHES A BOT, RESET POSITION & DECREMENT LIVES
    function collide() {
 
       console.log('oh no!');
-      player.style.bottom = '0px';
-      player.style.left = '190px';
       playerPosVert = 0;
       playerPosHoriz = 190;
+      player.style.bottom = playerPosVert + 'px';
+      player.style.left = playerPosHoriz + 'px';
       lives--;
       if (lives === 0) {
          console.log('you lose');
@@ -96,10 +99,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
 
       function resetPlayer() {
-        player.style.bottom = '0px';
-        player.style.left = '190px';
         playerPosVert = 0;
         playerPosHoriz = 190;
+        player.style.bottom = playerPosVert + 'px';
+        player.style.left = playerPosHoriz + 'px';
       }
 
       // IF PLAYER REACHES END GOALS, RESEST POSITION, LET GOALS ARRAY REFLECT WIN
@@ -135,51 +138,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
    // CHECK FOR COLLISION
-   function checkCollision(param1) {
-      playerLeft = parseInt((player.style.left).match(/[0-9]+/));
-      playerRight = (parseInt((player.style.left).match(/[0-9]+/)) + player.offsetWidth);
-      playerBottom = parseInt((player.style.bottom).match(/[0-9]+/));
-      playerTop = (parseInt((player.style.bottom).match(/[0-9]+/)) + player.offsetHeight);
+   function checkCollision(botPosHoriz, botPosVert) {
+     console.log('checking collision');
+      if (playerPosHoriz < (botPosHoriz + 50) && (playerPosHoriz + 50) > botPosHoriz && playerPosVert < (botPosVert + 50) && (playerPosVert + 50) > botPosVert) {
 
-      robotLeft = parseInt((param1.style.left).match(/[0-9]+/));
-      robotRight = (parseInt((param1.style.left).match(/[0-9]+/)) + param1.offsetWidth);
-      robotBottom = parseInt((param1.style.bottom).match(/[0-9]+/));
-      robotTop = (parseInt((param1.style.bottom).match(/[0-9]+/)) + param1.offsetHeight);
 
-      if (playerLeft < (robotRight)
-      && robotLeft < (playerRight)
-      && playerBottom < (robotTop)
-      && robotBottom < (playerTop)) {
-        debugger;
-        param1.classList.add('zapped');
-        player.classList.add('zapped');
         let ghost = document.createElement('div');
-        console.log(ghost, 'ghost');
         ghost.style.position = 'absolute';
-        ghost.style.left = robotLeft + "px";
-        ghost.style.width = robotRight - robotLeft + "px";
-        ghost.style.bottom = robotBottom + "px";
-        ghost.style.height = robotTop - robotBottom + "px";
+        ghost.style.left = botPosHoriz + 'px';
+        ghost.style.width = 50 + 'px';
+        ghost.style.bottom = botPosVert + 'px';
+        ghost.style.height = 50 + 'px';
         ghost.style.backgroundColor = "rgba(63,91,63,.4)";
         ghost.style.display = 'block';
         container.append(ghost);
 
         let dead = document.createElement('div');
-        console.log(dead, 'dead');
         dead.style.position = 'absolute';
-        dead.style.left = playerLeft + "px";
-        dead.style.width = playerRight - playerLeft + "px";
-        dead.style.bottom = playerBottom + "px";
-        dead.style.height = playerTop - playerBottom + "px";
+        dead.style.left = playerPosHoriz + "px";
+        dead.style.width = 50 + "px";
+        dead.style.bottom = playerPosVert + 'px';
+        dead.style.height = 50 + "px";
         dead.style.backgroundColor = "rgba(191,104,63,.4)";
         dead.style.display = 'block';
         container.append(dead);
-
         collide();
       }
-
-
    }
+
+  //  if (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
+	// 	object1.y < object2.y + object2.height && object1.y + object1.height > object2.y) {
+
+      // (playerPosHoriz < (botPosHoriz + 50) && (playerPosHoriz + 50) > botPosHoriz && playerPosVert < (botPosVert + 50) && (playerPosVert + 50) > botPosVert)
+// The objects are touching
+
 
    // CREATE GAME ON SCREEN
    function createGame() {
@@ -193,34 +185,36 @@ document.addEventListener("DOMContentLoaded", function(event) {
          let botsPerRow = row.botPicks.length;
          let offset = parseInt((480 - (50 * botsPerRow)) / botsPerRow);
          for (let y = 0; y < botsPerRow; y++) {
+           let botPosVert = 0;
+           let botPosHoriz = 0;
             let bot = document.createElement('div');
             let set = levels[level][x].botPicks[y];
             bot.className = 'bot';
             if (x < 5) {
-               bot.style.bottom = ((x + 1) * 50) + 'px';
+               botPosVert = ((x + 1) * 50);
+               bot.style.bottom = botPosVert + 'px';
             } else {
-               bot.style.bottom = ((x + 2) * 50) + 'px';
+               botPosVert = ((x + 2) * 50);
+               bot.style.bottom = botPosVert + 'px';
             }
             bot.style.backgroundImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set${set})`;
             container.append(bot);
-            let botOffset = (((offset) + 50) * y);
-            bot.style.left = botOffset + 'px';
-            let botPosition = botOffset;
+            botPosHoriz = (((offset) + 50) * y);
+            bot.style.left = botPosHoriz + 'px';
 
             function moveBot() {
-               botPosition = botPosition + row.velocity;
-               bot.style.left = botPosition + 'px';
-               checkCollision(bot);
-               if (Math.abs(botPosition) >= 430) {
-                  botPosition = -50;
+               botPosHoriz = botPosHoriz + row.velocity;
+               bot.style.left = botPosHoriz + 'px';
+               if (Math.abs(botPosHoriz) >= 430) {
+                  botPosHoriz = -50;
                }
 
-               if ((botPosition) < -50) {
-                  botPosition = 430;
+               if ((botPosHoriz) < -50) {
+                  botPosHoriz = 430;
 
                }
                requestAnimationFrame(moveBot);
-
+               checkCollision(botPosHoriz, botPosVert);
             }
 
             moveBot();
