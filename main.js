@@ -1,21 +1,3 @@
-/*
-bugs:
-  - collision w/same top & bottom << or top & bottom equal *
-  - pick square images/full width & height
-  - create space between goals << just make divs smaller, check for frogger at them. how to keep frogger off margins? position him relative?
-  - why are lives decrementing when moving player under 0? bc not touching/bordering a monster
-
-changes:
-  - make everything half scale
-  - create goal counter
-  - make robots smaller than row
-  - make robots and player different sizes?
-
-extras:
- - add log/water collision logic
- - customize images > custom api
-*/
-
 // LOAD DOM
 document.addEventListener("DOMContentLoaded", function(event) {
 
@@ -28,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    const getSeedLabel = document.getElementById('getSeedLabel');
    let modalText = document.getElementById('modalText');
    let modal = document.getElementById('modal');
-   let seed = '';
+   let seed = 'example';
    // LEVEL GENERATION
    let level = 0;
    let botOptions = [1, 2, 3];
@@ -39,20 +21,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let d = -25;
    let l = -25;
    let r = +25;
-   // KEEP TRACK OF WINS/LOSSES
-   //  let outcome = 'default';
    // CREATE PLAYER & BOTS
    const player = document.getElementById('player');
+   player.style.left = '190px';
    // MOVEMENT && SCORING
    let playerPosHoriz = 190;
    let playerPosVert = 0;
-   let goalScore = [1, 1, 0, 1, 1];
+   let goalScore = [0, 0, 0, 0, 0];
    let goals = document.getElementsByClassName('goal');
    let lives = 3;
 
-
-   // RESULT OF COLLISION
+   // IF PLAYER TOUCHES A BOT, RESET POSITION & DECREMENT LIVES
    function collide() {
+
       console.log('oh no!');
       player.style.bottom = '0px';
       player.style.left = '190px';
@@ -70,17 +51,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
    }
 
-   /// CHECK USER INPUT
+   /// ARROW KEY INPUT TRIGGERS MOVEMENT FUNCTIONS
    function checkKey(e) {
-      console.log('checking key');
       e = e || window.event;
       let direction = '';
       if (e.keyCode == '38') {
-         //  console.log('going up');
+        // right arrow
          move('up');
       } else if (e.keyCode == '40') {
          // down arrow
-         console.log('down');
          move('down');
       } else if (e.keyCode == '37') {
          // left arrow
@@ -92,63 +71,57 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
    }
 
-   // MOVE playerfunction move(direction) {
+   // MOVE PLAYER IN DIRECTION
    function move(direction) {
       if (direction === 'up') {
-         playerPosVert = playerPosVert + u;
-         player.style.bottom = playerPosVert + 'px';
+         if (playerPosVert < 600) {
+            playerPosVert = playerPosVert + u;
+            player.style.bottom = playerPosVert + 'px';
+         }
       } else if (direction === 'down') {
-         playerPosVert = playerPosVert + d;
-         player.style.bottom = playerPosVert + 'px';
+         if (playerPosVert > 0) {
+            playerPosVert = playerPosVert + d;
+            player.style.bottom = playerPosVert + 'px';
+         }
       } else if (direction === 'left') {
-         playerPosHoriz = playerPosHoriz + l;
-         player.style.left = playerPosHoriz + 'px';
+         if (playerPosHoriz > 0) {
+            playerPosHoriz = playerPosHoriz + l;
+            player.style.left = playerPosHoriz + 'px';
+         }
       } else {
-         playerPosHoriz = playerPosHoriz + r;
-         player.style.left = playerPosHoriz + 'px';
+         if (playerPosHoriz < 380) {
+            playerPosHoriz = playerPosHoriz + r;
+            player.style.left = playerPosHoriz + 'px';
+         }
       }
 
+      function resetPlayer() {
+        player.style.bottom = '0px';
+        player.style.left = '190px';
+        playerPosVert = 0;
+        playerPosHoriz = 190;
+      }
 
-
+      // IF PLAYER REACHES END GOALS, RESEST POSITION, LET GOALS ARRAY REFLECT WIN
       if (playerPosVert >= 600) {
          if (playerPosHoriz <= 86) {
-            console.log('you win in goal 1!');
-            player.style.bottom = '0px';
-            player.style.left = '190px';
-            playerPosVert = 0;
-            playerPosHoriz = 190;
             goals[0].className += ' win';
+            resetPlayer();
             goalScore[0] = 1;
          } else if (playerPosHoriz > 86 && playerPosHoriz <= 172) {
-            console.log('you win in goal 2!');
-            player.style.bottom = '0px';
-            player.style.left = '190px';
-            playerPosVert = 0;
-            playerPosHoriz = 190;
+            resetPlayer();
             goals[1].className += ' win';
             goalScore[1] = 1;
          } else if (playerPosHoriz > 172 && playerPosHoriz <= 258) {
-            console.log('you win in goal 3!');
-            player.style.bottom = '0px';
-            player.style.left = '190px';
-            playerPosVert = 0;
-            playerPosHoriz = 190;
+           resetPlayer();
             goals[2].className += ' win';
             goalScore[2] = 1;
          } else if (playerPosHoriz > 258 && playerPosHoriz < 344) {
-            console.log('you win in goal 4!');
-            player.style.bottom = '0px';
-            player.style.left = '190px';
-            playerPosVert = 0;
-            playerPosHoriz = 190;
+           resetPlayer();
             goals[3].className += ' win';
             goalScore[3] = 1;
          } else {
-            console.log('you win in goal 5!');
-            player.style.bottom = '0px';
-            player.style.left = '190px';
-            playerPosVert = 0;
-            playerPosHoriz = 190;
+            resetPlayer();
             goals[4].className += ' win';
             goalScore[4] = 1;
          }
@@ -162,26 +135,47 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
    // CHECK FOR COLLISION
-   //  console.log(player.style.left);
-
-   //  console.log(bots);
-
    function checkCollision(param1) {
       playerLeft = parseInt((player.style.left).match(/[0-9]+/));
-      // console.log(playerLeft);
       playerRight = (parseInt((player.style.left).match(/[0-9]+/)) + player.offsetWidth);
       playerBottom = parseInt((player.style.bottom).match(/[0-9]+/));
       playerTop = (parseInt((player.style.bottom).match(/[0-9]+/)) + player.offsetHeight);
-
 
       robotLeft = parseInt((param1.style.left).match(/[0-9]+/));
       robotRight = (parseInt((param1.style.left).match(/[0-9]+/)) + param1.offsetWidth);
       robotBottom = parseInt((param1.style.bottom).match(/[0-9]+/));
       robotTop = (parseInt((param1.style.bottom).match(/[0-9]+/)) + param1.offsetHeight);
 
-      if ((((playerBottom < robotTop) && (playerBottom > robotBottom)) || ((playerTop > robotBottom) && (playerTop < robotTop)) || ((playerTop === robotTop) && (playerBottom === robotBottom))) && (((playerLeft > robotLeft) && (playerLeft < robotRight)) || ((playerRight > robotLeft) && (playerRight < robotRight)))) {
-         console.log('collided!');
-         collide();
+      if (playerLeft < (robotRight)
+      && robotLeft < (playerRight)
+      && playerBottom < (robotTop)
+      && robotBottom < (playerTop)) {
+        debugger;
+        param1.classList.add('zapped');
+        player.classList.add('zapped');
+        let ghost = document.createElement('div');
+        console.log(ghost, 'ghost');
+        ghost.style.position = 'absolute';
+        ghost.style.left = robotLeft + "px";
+        ghost.style.width = robotRight - robotLeft + "px";
+        ghost.style.bottom = robotBottom + "px";
+        ghost.style.height = robotTop - robotBottom + "px";
+        ghost.style.backgroundColor = "rgba(63,91,63,.4)";
+        ghost.style.display = 'block';
+        container.append(ghost);
+
+        let dead = document.createElement('div');
+        console.log(dead, 'dead');
+        dead.style.position = 'absolute';
+        dead.style.left = playerLeft + "px";
+        dead.style.width = playerRight - playerLeft + "px";
+        dead.style.bottom = playerBottom + "px";
+        dead.style.height = playerTop - playerBottom + "px";
+        dead.style.backgroundColor = "rgba(191,104,63,.4)";
+        dead.style.display = 'block';
+        container.append(dead);
+
+        collide();
       }
 
 
@@ -198,7 +192,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
          let row = levels[level][x];
          let botsPerRow = row.botPicks.length;
          let offset = parseInt((480 - (50 * botsPerRow)) / botsPerRow);
-         //  console.log(offset);
          for (let y = 0; y < botsPerRow; y++) {
             let bot = document.createElement('div');
             let set = levels[level][x].botPicks[y];
@@ -217,21 +210,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
             function moveBot() {
                botPosition = botPosition + row.velocity;
                bot.style.left = botPosition + 'px';
+               checkCollision(bot);
                if (Math.abs(botPosition) >= 430) {
                   botPosition = -50;
                }
 
                if ((botPosition) < -50) {
                   botPosition = 430;
+
                }
                requestAnimationFrame(moveBot);
-               checkCollision(bot);
+
             }
+
             moveBot();
+
          }
       }
    }
-
    document.onkeydown = checkKey;
 
 
@@ -242,14 +238,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
       modal.classList.remove('hidden');
       submit.addEventListener('click', function(event) {
          if (outcome === 'win') {
-            // restart
             level++;
          } else if (outcome === 'loss') {
-            // restart
             location.reload();
          } else {
             event.preventDefault();
-            seed = getSeed.value;
+            if (getSeed.value !== ''){
+              seed = getSeed.value;
+            }
             console.log(seed, 'seed');
             createGame();
 
@@ -258,13 +254,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
 
       if (outcome === 'win') {
-         stopMovement();
          modalText.innerHTML = 'Continue to next level!';
          submit.value = 'continue';
          getSeed.classList.add('hidden');
          getSeedLabel.classList.add('hidden');
       } else if (outcome === 'loss') {
-         stopMovement();
          modalText.innerHTML = 'Oh no! You\'re out of lives!';
          submit.value = 'restart';
          getSeed.classList.add('hidden');
@@ -272,128 +266,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
    }
 
-   // STOP GAME
-   function stopMovement() {
-      // stop player & monster movement on loss/win
-   }
-
    setModal();
 
-
-
-
-
-   // MAKE CREATING PLAYER AND BOTS A CALL BACK FUNCTION AFTER SUBMIT IS CLICKED & IMAGES ARE LOADED
-   //  createPlayer();
-
-
 });
-
-
-
-/*
-global vars - seed, robot pos, player pos
-new game modal -- seed
-reset game/loss modal
-win/next level modal
-
-GET png request(s) -- seed
-
-define robots
-move robots - direction/speed
-define player
-set player controls
-move player
-check collision
-check win
-
-set water rows
-*/
-
-
-/*
-load
-restart modal
-win modal
-modal  <- modal(start/win/restart)
-robot vars - distance between, offset, speed
-
-// on load submit load icon, on make players/robots, setup game (if lag)
-
-setup game (on http requests complete <- need #image types ahead of time)
-  * do I need this in a function? just wait for load? *
-  make player
-  get level - sets robot variables
-    make robots (image set, bottom offset, index, speed/direction, #monsters, distance between)
-    ^ make distance between calc based on #monsters; need index?; try to call only once
-
-define robots
-  for #robots
-    set distance between
-    create robot div
-    add class robot
-    set background image << http response var(s)
-    * set robot left & bottom offset
-    set robot position to offset (space between * index of monster)
-    append robot
-    set robot classname by index: bot, robot2, etc (for looping through robots in collide check << probably unnecessary << just get all by class robot and apply in a loop?)
-
-    declare move robot () << move out?!
-      increment robot position
-      update left position of robot
-      if robot reaches end in either direction, reset to beginning
-      request animation frame
-      check collision() << move out?! could loop through all continually/while game running do this, or by row frog is in // only check once robots = true (looping through existing should take care of this? get array of robots once define is complete/true)
-
-    move robot()
-
-define player (player)
-      make
-      give id, class, background image (http GET url)
-      * set position left & bottom
-      append
-
- keydown listener
- check key ()
-
- global vars for u,d,l,r (move up to top)
-
- move player()
-  for each direction, move player position < change to object literal, run once? object: keycode, direction name, +/- #pixels to move
-  check goals for win // change to only runs on player pos = goal,  height < change to object literal
-    ^ make this cleaner - margins between goals, clear win/loss < change 1 hop to be 1 whole box?
-      if goal, reset player position << break out into function, update goals
-        if all goals, display win modal, update level
-
-  collided
-    alert user
-    reset player position (put a delay on this?, maybe combined with alerting user - toast?)
-    decrement lives
-    if no more lives
-      run restart modal
-
-  check collision (robot class name, number of robot rows << don't need if getting all and looping through all)
-        set value of player & robot borders (l,r,t,b)
-
-        if player is on water row (top & bottom within water row ranges)
-          collision is when player is NOT touching a robot < rename check death, element
-        check collision function or (!collision function, if player in water row) << need to update to fix sneaking through aligned bug
-          if collision, run collide()
-
-  GET requests currently at bottom, move up
-*/
-
-//* BONUS: python firebase api from robohash template w/custom images < THURS
-// THURS
-// ts currently at bottom, move up
-//    *
-//    /
-//
-// //* BONUS: python firebase api from robohash template w/custom images < THURS
-// // THURS
-// ts currently at bottom, move up
-//    *
-//    /
-
-//* BONUS: python firebase api from robohash template w/custom images < THURS
-// THURS

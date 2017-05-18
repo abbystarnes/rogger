@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>ROGGER</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -18,10 +19,10 @@
     </div>
     <div id="modal" class="modal">
       <form action="#">
-        <label id="getSeedLabel" for="getSeed">Please enter your name:</label>
-        <input id="getSeed" type="text">
-        <p id="modalText">Your name will determine which robots appear!</p>
-        <input id="submit" type="submit" value='start'>
+        <label class="seed-label" id="getSeedLabel" for="getSeed">Enter a seed to generate robots:</label>
+        <input id="getSeed" placeholder='seed' class="get-seed" type="text" required>
+        <p id="modalText"></p>
+        <input class="submit" id="submit" type="submit" value='start'>
       </form>
     </div>
     <div id="player" class="player"></div>
