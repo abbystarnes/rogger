@@ -26,9 +26,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
    // MOVEMENT && SCORING
    let playerPosHoriz = 190;
    let playerPosVert = 0;
-   let goalScore = [0, 0, 0, 0, 0];
+   let goalScore = [1, 1, 0, 1, 1];
    let goals = document.getElementsByClassName('goal');
    let lives = 3;
+  //  for (let z = 0; z)
+  //  let life = document.createElement('div');
+  //  life.classList.add('life');
+  //  container.append('life');
 
    // CREATE PLAYER & BOTS
    const player = document.getElementById('player');
@@ -47,15 +51,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
          console.log('you lose');
          setModal('loss');
       }
-      console.log('lives left:', lives);
-      if (lives === 0) {
-         console.log(' out of lives!');
-         //  makeModalRestart();
-      }
    }
 
    /// ARROW KEY INPUT TRIGGERS MOVEMENT FUNCTIONS
    function checkKey(e) {
+     if (lives > 0){
       e = e || window.event;
       let direction = '';
       if (e.keyCode == '38') {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
          // right arrow
          move('right');
       }
-
+    }
    }
 
    // MOVE PLAYER IN DIRECTION
@@ -138,46 +138,42 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
    // CHECK FOR COLLISION
-   function checkCollision(botPosHoriz, botPosVert) {
-     console.log('checking collision');
+   function checkCollision(botPosHoriz, botPosVert, bot) {
       if (playerPosHoriz < (botPosHoriz + 50) && (playerPosHoriz + 50) > botPosHoriz && playerPosVert < (botPosVert + 50) && (playerPosVert + 50) > botPosVert) {
 
+        //
+        let ghost1 = document.createElement('div');
+        ghost1.style.position = 'absolute';
+        ghost1.style.left = botPosHoriz + 'px';
+        ghost1.style.width = 50 + 'px';
+        ghost1.style.bottom = botPosVert + 'px';
+        ghost1.style.height = 50 + 'px';
+        ghost1.style.backgroundColor = "rgba(63,91,63,.4)";
+        ghost1.style.display = 'block';
+        container.append(ghost1);
 
         let ghost = document.createElement('div');
         ghost.style.position = 'absolute';
-        ghost.style.left = botPosHoriz + 'px';
-        ghost.style.width = 50 + 'px';
-        ghost.style.bottom = botPosVert + 'px';
-        ghost.style.height = 50 + 'px';
-        ghost.style.backgroundColor = "rgba(63,91,63,.4)";
+        ghost.style.left = playerPosHoriz + "px";
+        ghost.style.width = 50 + "px";
+        ghost.style.bottom = playerPosVert + 'px';
+        ghost.style.height = 50 + "px";
+        ghost.style.backgroundColor = "rgba(63,91,124,.4)";
         ghost.style.display = 'block';
         container.append(ghost);
-
-        let dead = document.createElement('div');
-        dead.style.position = 'absolute';
-        dead.style.left = playerPosHoriz + "px";
-        dead.style.width = 50 + "px";
-        dead.style.bottom = playerPosVert + 'px';
-        dead.style.height = 50 + "px";
-        dead.style.backgroundColor = "rgba(191,104,63,.4)";
-        dead.style.display = 'block';
-        container.append(dead);
+        bot.classList.add('zapped');
+        player.classList.add('zapped');
         collide();
       }
    }
-
-  //  if (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
-	// 	object1.y < object2.y + object2.height && object1.y + object1.height > object2.y) {
-
-      // (playerPosHoriz < (botPosHoriz + 50) && (playerPosHoriz + 50) > botPosHoriz && playerPosVert < (botPosVert + 50) && (playerPosVert + 50) > botPosVert)
-// The objects are touching
-
 
    // CREATE GAME ON SCREEN
    function createGame() {
 
       // CREATE PLAYER
-      player.style.backgroundImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
+      let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
+      player.style.backgroundImage = playerImage;
+
       // CREATE BOTS
       let numRows = levels[level].length;
       for (let x = 0; x < numRows; x++) {
@@ -214,11 +210,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                }
                requestAnimationFrame(moveBot);
-               checkCollision(botPosHoriz, botPosVert);
+               checkCollision(botPosHoriz, botPosVert, bot);
             }
-
-            moveBot();
-
+              moveBot();
          }
       }
    }
@@ -233,6 +227,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       submit.addEventListener('click', function(event) {
          if (outcome === 'win') {
             level++;
+            console.log(level, 'level');
+            let bots = container.getElementsByClassName('bot');
+            while (bots[0]) {
+                bots[0].parentNode.removeChild(bots[0]);
+            }
+            createGame();
          } else if (outcome === 'loss') {
             location.reload();
          } else {
@@ -241,8 +241,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
               seed = getSeed.value;
             }
             console.log(seed, 'seed');
-            createGame();
-
+            if (lives > 0){
+              createGame();
+            }
          }
          modal.classList.add('hidden');
       });
