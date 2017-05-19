@@ -22,56 +22,50 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let d = -25;
    let l = -25;
    let r = +25;
-
-   let outcome = 'default';
-
    // MOVEMENT && SCORING
    let goalScore = [0, 1, 0, 1, 0];
    let goals = document.getElementsByClassName('goal');
    let lives = 3;
    let playerLivesCounter = 0;
-
-
+   let outcome = 'default';
    // CREATE PLAYER & BOTS
    let playerPosHoriz = 190;
    let playerPosVert = 0;
    const player = document.getElementById('player');
    player.style.left = playerPosHoriz + 'px';
 
-   // IF PLAYER TOUCHES A BOT, RESET POSITION & DECREMENT LIVES
-
 
    /// ARROW KEY INPUT TRIGGERS MOVEMENT FUNCTIONS
    function checkKey(e) {
-     if (lives > 0){
-      e = e || window.event;
-      let direction = '';
-      if (e.keyCode == '38') {
-        // right arrow
-         mover('up');
-      } else if (e.keyCode == '40') {
-         // down arrow
-         mover('down');
-      } else if (e.keyCode == '37') {
-         // left arrow
-         mover('left');
-      } else if (e.keyCode == '39') {
-         // right arrow
-         mover('right');
+      if (lives > 0) {
+         e = e || window.event;
+         let direction = '';
+         if (e.keyCode == '38') {
+            // right arrow
+            mover('up');
+         } else if (e.keyCode == '40') {
+            // down arrow
+            mover('down');
+         } else if (e.keyCode == '37') {
+            // left arrow
+            mover('left');
+         } else if (e.keyCode == '39') {
+            // right arrow
+            mover('right');
+         }
       }
-    }
    }
 
 
    // MOVE PLAYER IN DIRECTION
    function mover(direction) {
       if (direction === 'up') {
-        if (((playerPosVert >= 550) && (playerPosHoriz < 86 || (playerPosHoriz > 172 && playerPosHoriz < 258) || playerPosHoriz > 344 ))|| playerPosVert < 550){
-         if (playerPosVert < 600) {
-            playerPosVert = playerPosVert + u;
-            player.style.bottom = playerPosVert + 'px';
+         if (((playerPosVert >= 550) && (playerPosHoriz < 86 || (playerPosHoriz > 172 && playerPosHoriz < 258) || playerPosHoriz > 344)) || playerPosVert < 550) {
+            if (playerPosVert < 600) {
+               playerPosVert = playerPosVert + u;
+               player.style.bottom = playerPosVert + 'px';
+            }
          }
-       }
       } else if (direction === 'down') {
          if (playerPosVert > 0) {
             playerPosVert = playerPosVert + d;
@@ -89,12 +83,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
          }
       }
 
-
+      // reset player to beginning
       function resetPlayer() {
-        playerPosVert = 0;
-        playerPosHoriz = 190;
-        player.style.bottom = playerPosVert + 'px';
-        player.style.left = playerPosHoriz + 'px';
+         playerPosVert = 0;
+         playerPosHoriz = 190;
+         player.style.bottom = playerPosVert + 'px';
+         player.style.left = playerPosHoriz + 'px';
       }
 
       // IF PLAYER REACHES END GOALS, RESEST POSITION, LET GOALS ARRAY REFLECT WIN
@@ -108,11 +102,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
             goals[1].className += ' win';
             goalScore[1] = 1;
          } else if (playerPosHoriz > 172 && playerPosHoriz <= 258) {
-           resetPlayer();
+            resetPlayer();
             goals[2].className += ' win';
             goalScore[2] = 1;
          } else if (playerPosHoriz > 258 && playerPosHoriz < 344) {
-           resetPlayer();
+            resetPlayer();
             goals[3].className += ' win';
             goalScore[3] = 1;
          } else {
@@ -129,115 +123,102 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
    }
 
-  //  class Player {
-  //    constructor(playerPosHoriz, playerPosVert){
-  //      this.playerPosHoriz = playerPosHoriz;
-  //      this.playerPosVert = playerPosVert;
-  //    }
-  //    let playerPosHoriz = 190;
-  //    let playerPosVert = 0;
-  //  }
-
-  class Engine {
-    constructor(){
-      this.botObjs = [];
-      this.requestId = null;
-      this.MoveRobots();
-    }
-    InitRobots(botObjs){
-      this.botObjs = botObjs;
-    }
-
-    MoveRobots(){
-      for (let x = 0; x < this.botObjs.length; x++){
-        this.botObjs[x].move();
+   // get array of created bot objects && move them, remove movement on end of level
+   class Engine {
+      constructor() {
+         this.botObjs = [];
+         this.requestId = null;
+         this.MoveRobots();
       }
-      this.requestId = window.requestAnimationFrame(this.MoveRobots.bind(this));
-    }
-
-    RemoveRobots(){
-      for (let x = 0; x < this.botObjs.length; x++){
-        this.botObjs[x].remove();
+      InitRobots(botObjs) {
+         this.botObjs = botObjs;
       }
-      window.cancelAnimationFrame(this.requestId);
-    }
-  }
+
+      MoveRobots() {
+         for (let x = 0; x < this.botObjs.length; x++) {
+            this.botObjs[x].move();
+         }
+         this.requestId = window.requestAnimationFrame(this.MoveRobots.bind(this));
+      }
+
+      RemoveRobots() {
+         for (let x = 0; x < this.botObjs.length; x++) {
+            this.botObjs[x].remove();
+         }
+         window.cancelAnimationFrame(this.requestId);
+      }
+   }
 
    // create robot class
    class Robot {
-     constructor(vertPosition, horizPosition, velocity, offset, set) {
-       this.verticalPosition = vertPosition;
-       this.horizontalPosition = horizPosition;
-       this.velocity = velocity;
-       this.offset = offset;
-       this.set = set;
-       this.level = level;
-       this.bot = this.create();
-       this.requestId = this.move();
-     }
-     remove(){
-       this.bot.parentNode.removeChild(this.bot);
-     }
-     create(){
-       let bot = document.createElement('div');
-       bot.className = 'bot';
-       bot.style.bottom = this.verticalPosition + 'px';
-       bot.style.backgroundImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set${this.set})`;
-       container.append(bot);
-       bot.style.left = this.horizontalPosition + 'px';
-       return bot;
-     }
-     move() {
-          this.horizontalPosition = this.horizontalPosition + this.velocity;
-          this.bot.style.left = this.horizontalPosition + 'px';
-          if (Math.abs(this.horizontalPosition) >= 430) {
-             this.horizontalPosition = -50;
-          }
-          if ((this.horizontalPosition) < -50) {
-             this.horizontalPosition = 430;
-          }
-          this.checkCollision(this.horizontalPosition, this.verticalPosition);
-       }
-     checkCollision() {
-       if (playerPosHoriz < (this.horizontalPosition + 50) && (playerPosHoriz + 50) > this.horizontalPosition && playerPosVert < (this.verticalPosition + 50) && (playerPosVert + 50) > this.verticalPosition) {
+      constructor(vertPosition, horizPosition, velocity, offset, set) {
+         this.verticalPosition = vertPosition;
+         this.horizontalPosition = horizPosition;
+         this.velocity = velocity;
+         this.offset = offset;
+         this.set = set;
+         this.level = level;
+         this.bot = this.create();
+         this.requestId = this.move();
+      }
+      remove() {
+         this.bot.parentNode.removeChild(this.bot);
+      }
+      create() {
+         let bot = document.createElement('div');
+         bot.className = 'bot';
+         bot.style.bottom = this.verticalPosition + 'px';
+         bot.style.backgroundImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set${this.set})`;
+         container.append(bot);
+         bot.style.left = this.horizontalPosition + 'px';
+         return bot;
+      }
+      move() {
+         this.horizontalPosition = this.horizontalPosition + this.velocity;
+         this.bot.style.left = this.horizontalPosition + 'px';
+         if (Math.abs(this.horizontalPosition) >= 430) {
+            this.horizontalPosition = -50;
+         }
+         if ((this.horizontalPosition) < -50) {
+            this.horizontalPosition = 430;
+         }
+         this.checkCollision(this.horizontalPosition, this.verticalPosition);
+      }
+      checkCollision() {
+         if (playerPosHoriz < (this.horizontalPosition + 50) && (playerPosHoriz + 50) > this.horizontalPosition && playerPosVert < (this.verticalPosition + 50) && (playerPosVert + 50) > this.verticalPosition) {
 
-         this.collide();
-       }
-     }
-     collide(){
-          console.log('oh no!');
-          playerPosVert = 0;
-          playerPosHoriz = 190;
-          player.style.bottom = playerPosVert + 'px';
-          player.style.left = playerPosHoriz + 'px';
-          lives--;
-          playerLives[playerLivesCounter].style.backgroundImage = '';
-          playerLivesCounter ++;
-          if (lives === 0) {
-             console.log('you lose');
-             outcome = 'loss';
-             setModal();
-          }
-     }
+            this.collide();
+         }
+      }
+      collide() {
+         console.log('oh no!');
+         playerPosVert = 0;
+         playerPosHoriz = 190;
+         player.style.bottom = playerPosVert + 'px';
+         player.style.left = playerPosHoriz + 'px';
+         lives--;
+         playerLives[playerLivesCounter].style.backgroundImage = '';
+         playerLivesCounter++;
+         if (lives === 0) {
+            console.log('you lose');
+            outcome = 'loss';
+            setModal();
+         }
+      }
    }
 
    let playerLives = document.getElementsByClassName('life');
 
 
-   // CREATE GAME ON SCREEN
+   // CREATE NEW LEVEL ON SCREEN
    function createGame() {
-     outcome = 'default';
-     engineObj = new Engine();
+      outcome = 'default';
+      engineObj = new Engine();
       // CREATE PLAYER
-      for ( let x = 0; x < goals.length; x++){
-        goals[x].classList.remove('win');
+      for (let x = 0; x < goals.length; x++) {
+         goals[x].classList.remove('win');
       }
 
-      // for ( let x = 0; x < goalScore.length; x++){
-      //    if (x === 0 || x === 2 || x === 4){
-      //      goalScore[x] === 0;
-      //    }
-      // }
       goalScore = [0, 1, 0, 1, 0];
       console.log(goalScore);
 
@@ -249,9 +230,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
          let botsPerRow = row.botPicks.length;
          let offset = parseInt((480 - (50 * botsPerRow)) / botsPerRow);
          for (let y = 0; y < botsPerRow; y++) {
-           let botPosVert = 0;
-           let botPosHoriz = 0;
-           let set = levels[level][x].botPicks[y];
+            let botPosVert = 0;
+            let botPosHoriz = 0;
+            let set = levels[level][x].botPicks[y];
             if (x < 5) {
                botPosVert = ((x + 1) * 50);
             } else {
@@ -269,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    document.onkeydown = checkKey;
 
    submit.addEventListener('click', function(event) {
-     event.preventDefault();
+      event.preventDefault();
       if (outcome === 'win') {
          level++;
          console.log(level, 'level');
@@ -279,17 +260,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
          location.reload();
       } else {
 
-         if (getSeed.value !== ''){
-           seed = getSeed.value;
+         if (getSeed.value !== '') {
+            seed = getSeed.value;
          }
          console.log(seed, 'seed');
          let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
          player.style.backgroundImage = playerImage;
-         for (let b = 0; b < playerLives.length; b++ ){
-           playerLives[b].style.backgroundImage = playerImage;
+         for (let b = 0; b < playerLives.length; b++) {
+            playerLives[b].style.backgroundImage = playerImage;
          }
-         if (lives > 0){
-           createGame();
+         if (lives > 0) {
+            createGame();
          }
       }
       modal.classList.add('hidden');

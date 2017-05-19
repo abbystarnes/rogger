@@ -4,25 +4,46 @@
   color: white; }
 
 form {
-  margin-top: 3em; }
+  margin-top: 7em; }
 
 .get-seed {
   display: block;
   margin: 0 auto;
   background-color: black;
   box-shadow: inset 1px 1px 10px 1px rgba(105, 238, 255, 0.66);
-  border: none; }
+  border: none;
+  padding: 7px 15px; }
+
+.get-seed::placeholder {
+  color: #69eeff; }
+
+.modal-text {
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 216px;
+  margin: 0 auto;
+  padding: 1em;
+  color: #69eeff;
+  text-align: center; }
 
 .seed-label {
   margin: 0 auto;
+  margin-bottom: 1em;
   display: block;
-  text-align: center; }
+  text-align: center;
+  color: #69eeff; }
 
 .submit {
   background-color: black;
-  border: 1px solid white;
   margin: 0 auto;
-  display: block; }
+  display: block;
+  font-family: "Roboto Bold", 'Helvetica', sans-serif;
+  background-color: #69eeff;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 10px;
+  padding: 7px 15px;
+  border: none; }
 
 .container {
   width: 430px;
