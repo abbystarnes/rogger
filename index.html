@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>ROGGER</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -16,9 +17,18 @@
       <div class="goal"></div>
       <div class="goal"></div>
     </div>
-    <div id="modal" class="modal"></div>
+    <div id="modal" class="modal">
+      <form action="#">
+        <label class="seed-label" id="getSeedLabel" for="getSeed">Enter a seed to generate robots:</label>
+        <input id="getSeed" placeholder='seed' class="get-seed" type="text" required>
+        <p id="modalText"></p>
+        <input class="submit" id="submit" type="submit" value='start'>
+      </form>
+    </div>
+    <div id="player" class="player"></div>
   </div>
 </body>
-<script src="main.js"></script>
+<script src="levels.js"></script>
+<script src="mainTWO.js"></script>
 
 </html>

@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let lives = 3;
    let played = false;
    let url = '';
+   var logs = document.getElementsByClassName('water');
+   console.log(logs, 'logs');
 
 
    function makeModalRestart() {
@@ -39,13 +41,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       form.append(restart);
       modal.append(form);
       modal.style.display = 'block';
-      restart.addEventListener("click", function(event) {
-         //  event.preventDefault();
-         //  seed = seedInput.value;
-         //  console.log(seed);
-         //  modal.style.display = 'none';
-         //  setupGame();
-      });
+      restart.addEventListener("click", function(event) {});
 
    }
 
@@ -117,97 +113,51 @@ document.addEventListener("DOMContentLoaded", function(event) {
       for (let x = 0; x < number; x++) {
          let offset = between * x;
 
-         setTimeout(function() {
-            // console.log('robots');
 
-            let robot = document.createElement('div');
-            robot.className = 'robot';
-            robot.style.backgroundImage = `url(${url})`;
-            // /// GET ///////////////////
-            // var xhr = new XMLHttpRequest();
-            //
-            // xhr.addEventListener('load', function() {
-            //    if (xhr.status !== 200) {
-            //       return;
-            //    }
-            //
-            //    var data = xhr.response;
-            //    var arr = new Uint8Array(data.data);
-            //    var raw = String.fromCharCode.apply(null, arr);
-            //    var b64 = btoa(raw);
-            //    map.src = 'data:image/png;base64,' + b64;
-            //    console.log(data);
-            // });
-            //
-            // xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/53df');
-            // xhr.send();
+         // console.log('robots');
+
+         let robot = document.createElement('div');
+         robot.className = 'robot';
+         if (x === 2 || x === 3) {
+            robot.className += ' water';
+         }
+         robot.style.backgroundImage = `url(${url})`;
+         // /// GET ///////////////////
 
 
+         ////////////////////////////
+         container.append(robot);
+
+         robot.style.left = -150 + 'px';
+         robot.style.bottom = `${row}px`;
+         let robotPos = offset;
+         robot.className += ` robot${x}`;
+
+         function moveRobot() {
+            robotPos = robotPos + speed;
+
+            robot.style.left = robotPos + "px";
 
 
 
-            //
-            // var oReq = new XMLHttpRequest();
-            // oReq.open("GET", "/myfile.png", true);
-            // oReq.responseType = "arraybuffer";
-            //
-            // oReq.onload = function(oEvent) {
-            //    var blob = new Blob([oReq.response], {
-            //       type: "image/png"
-            //    });
-            //    // ...
-            // };
+            if (Math.abs(robotPos) >= 1100) {
+               robotPos = -150;
+            }
 
-            // oReq.send();
-            // var oReq = new XMLHttpRequest();
-            // oReq.open("post", '/somelocation/getmypic', true);
-            // oReq.responseType = "blob";
-            // oReq.onload = function(oEvent) {
-            //    var blob = oReq.response;
-            //    var imgSrc = URL.createObjectURL(blob);
-            //    var $img = $('<img/>', {
-            //       "alt": "test image",
-            //       "src": imgSrc
-            //    }).appendTo($('#bb_theImageContainer'));
-            //    window.URL.revokeObjectURL(imgSrc);
-            // };
-            // oReq.send(null);
-            ////////////////////////////
-            container.append(robot);
-
-            robot.style.left = -150 + 'px';
-            robot.style.bottom = `${row}px`;
-            let robotPos = offset;
-            robot.className += ` robot${x}`;
-
-            function moveRobot() {
-               robotPos = robotPos + speed;
-
-               robot.style.left = robotPos + "px";
+            if ((robotPos) < -150) {
+               robotPos = 1100;
+            }
 
 
+            requestAnimationFrame(moveRobot);
+            checkCollision(counter, number);
 
-               if (Math.abs(robotPos) >= 1100) {
-                  robotPos = -150;
-               }
-
-               if ((robotPos) < -150) {
-                  robotPos = 1100;
-               }
+         };
+         offset = offset + 100;
 
 
-               requestAnimationFrame(moveRobot);
-               checkCollision(counter, number);
+         moveRobot();
 
-            };
-            offset = offset + 100;
-
-
-            moveRobot();
-
-
-
-         }, 3000);
 
 
       }
@@ -352,27 +302,50 @@ document.addEventListener("DOMContentLoaded", function(event) {
    function checkCollision(param1, param2) {
 
 
+      charLeft = parseInt((character.style.left).match(/[0-9]+/));
+      charRight = (parseInt((character.style.left).match(/[0-9]+/)) + character.offsetWidth);
+      charBottom = parseInt((character.style.bottom).match(/[0-9]+/));
+      charTop = (parseInt((character.style.bottom).match(/[0-9]+/)) + character.offsetHeight);;
+
+
+      // if (charBottom >= 400) {
+      //    let drowning = true;
+      //    for (let p = 0; p < logs.length; p++) {
+      //
+      //       robotLeft = parseInt((logs[p].style.left).match(/[0-9]+/));
+      //       robotRight = (parseInt((logs[p].style.left).match(/[0-9]+/)) + logs[p].offsetWidth);
+      //       robotBottom = parseInt((logs[p].style.bottom).match(/[0-9]+/));
+      //       robotTop = (parseInt((logs[p].style.bottom).match(/[0-9]+/)) + logs[p].offsetHeight);
+      //
+      //       if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
+      //          drowning = false;
+      //       } else if ((charBottom === robotBottom) && (charTop === robotTop) && (charLeft === robotLeft) && (charRight === robotRight)) {
+      //          drowning = false;
+      //       }
+      //    }
+      //    if (drowning) {
+      //       console.log('fell in water!');
+      //       collide();
+      //    }
+      // } else {
+
+
       for (let y = 0; y < param2; y++) {
-         let robotName = 'robot' + (y);
-
-         robot1 = document.getElementsByClassName(`${robotName}`)[param1];
-
          if (robot1) {
-            charLeft = parseInt((character.style.left).match(/[0-9]+/));
-            charRight = (parseInt((character.style.left).match(/[0-9]+/)) + character.offsetWidth);
-            charTop = parseInt((character.style.bottom).match(/[0-9]+/));
-            charBottom = (parseInt((character.style.bottom).match(/[0-9]+/)) + character.offsetHeight);;
+            let robotName = 'robot' + (y);
+            robot1 = document.getElementsByClassName(`${robotName}`)[param1];
             robotLeft = parseInt((robot1.style.left).match(/[0-9]+/));
             robotRight = (parseInt((robot1.style.left).match(/[0-9]+/)) + robot1.offsetWidth);
             robotBottom = parseInt((robot1.style.bottom).match(/[0-9]+/));
             robotTop = (parseInt((robot1.style.bottom).match(/[0-9]+/)) + robot1.offsetHeight);
-            if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop))) && ((((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight))))) {
+
+            if ((((charBottom < robotTop) && (charBottom > robotBottom)) || ((charTop > robotBottom) && (charTop < robotTop)) || ((charTop === robotTop) && (charBottom === robotBottom))) && (((charLeft > robotLeft) && (charLeft < robotRight)) || ((charRight > robotLeft) && (charRight < robotRight)))) {
                console.log('collided!');
                collide();
-
             }
          }
 
+         //  }
       }
    }
 
@@ -393,4 +366,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
    xhr.open('GET', 'http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/53df');
    xhr.send();
-});
+});;
