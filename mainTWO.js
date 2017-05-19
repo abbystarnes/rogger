@@ -26,9 +26,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let outcome = 'default';
 
    // MOVEMENT && SCORING
-   let goalScore = [1, 1, 0, 1, 1];
+   let goalScore = [0, 1, 0, 1, 0];
    let goals = document.getElementsByClassName('goal');
    let lives = 3;
+   let playerLivesCounter = 0;
 
 
    // CREATE PLAYER & BOTS
@@ -61,13 +62,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
    }
 
+
    // MOVE PLAYER IN DIRECTION
    function mover(direction) {
       if (direction === 'up') {
+        if (((playerPosVert >= 550) && (playerPosHoriz < 86 || (playerPosHoriz > 172 && playerPosHoriz < 258) || playerPosHoriz > 344 ))|| playerPosVert < 550){
          if (playerPosVert < 600) {
             playerPosVert = playerPosVert + u;
             player.style.bottom = playerPosVert + 'px';
          }
+       }
       } else if (direction === 'down') {
          if (playerPosVert > 0) {
             playerPosVert = playerPosVert + d;
@@ -84,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             player.style.left = playerPosHoriz + 'px';
          }
       }
+
 
       function resetPlayer() {
         playerPosVert = 0;
@@ -195,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
        }
      checkCollision() {
        if (playerPosHoriz < (this.horizontalPosition + 50) && (playerPosHoriz + 50) > this.horizontalPosition && playerPosVert < (this.verticalPosition + 50) && (playerPosVert + 50) > this.verticalPosition) {
-    
+
          this.collide();
        }
      }
@@ -206,6 +211,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
           player.style.bottom = playerPosVert + 'px';
           player.style.left = playerPosHoriz + 'px';
           lives--;
+          playerLives[playerLivesCounter].style.backgroundImage = '';
+          playerLivesCounter ++;
           if (lives === 0) {
              console.log('you lose');
              outcome = 'loss';
@@ -214,14 +221,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
      }
    }
 
+   let playerLives = document.getElementsByClassName('life');
+
 
    // CREATE GAME ON SCREEN
    function createGame() {
      outcome = 'default';
      engineObj = new Engine();
       // CREATE PLAYER
-      let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
-      player.style.backgroundImage = playerImage;
+      for ( let x = 0; x < goals.length; x++){
+        goals[x].classList.remove('win');
+      }
+
+      // for ( let x = 0; x < goalScore.length; x++){
+      //    if (x === 0 || x === 2 || x === 4){
+      //      goalScore[x] === 0;
+      //    }
+      // }
+      goalScore = [0, 1, 0, 1, 0];
+      console.log(goalScore);
 
       // CREATE BOTS
       let numRows = levels[level].length;
@@ -260,10 +278,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } else if (outcome === 'loss') {
          location.reload();
       } else {
+
          if (getSeed.value !== ''){
            seed = getSeed.value;
          }
          console.log(seed, 'seed');
+         let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
+         player.style.backgroundImage = playerImage;
+         for (let b = 0; b < playerLives.length; b++ ){
+           playerLives[b].style.backgroundImage = playerImage;
+         }
          if (lives > 0){
            createGame();
          }
