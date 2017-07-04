@@ -13,27 +13,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
    let modal = document.getElementById('modal');
    let seed = 'example';
    let playerImage;
+   let botImage1;
+   let botImage2;
 
-   let myPromise = new Promise((resolve, reject) => {
-     var xhr = new XMLHttpRequest();
-     xhr.onreadystatechange = function() {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-          // alert(xhr.responseText);
-          resolve(xhr.responseText);
-      }
-     }
-     xhr.open('GET', "https://frogger-api.herokuapp.com/creature/sadf", true);
 
-     xhr.send(xhr.responseText);
-    //  console.log(svg, 'svg');
-  });
+ //  console.log(svg, 'svg');
+// 'GET', `https://frogger-api.herokuapp.com/creature/${seed}`
+function request(method, url){
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    xhr.onload = () => resolve(xhr.responseText);
+    xhr.onerror = () => reject(xhr.statusText);
+    xhr.send();
+ });
+}
+  //  let myPromise = new Promise((resolve, reject) => {
+  //    var xhr = new XMLHttpRequest();
+  //    xhr.open('GET', `https://frogger-api.herokuapp.com/creature/${seed}`, true);
+  //    xhr.onload = function() {
+  //      console.log('tada');
+  //      resolve(xhr.responseText)
+  //    }
+  //    xhr.send(xhr.responseText);
+  // });
 
-   myPromise.then((data) => {
+
+
+
+
     //  console.log(data);
-     playerImage = data;
+    //  playerImage = data;
     //  return playerImage
 
-   console.log(playerImage);
+  //  console.log(playerImage);
 
    let engineObj = null;
    // LEVEL GENERATION
@@ -192,7 +205,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
          let bot = document.createElement('div');
          bot.className = 'bot';
          bot.style.bottom = this.verticalPosition + 'px';
-         bot.style.backgroundImage = `url(https://frogger-api.herokuapp.com/creature/${seed})`;
+        //  console.log(botImage1, 'bot image 1');
+         bot.innerHTML = botImage1;
          container.append(bot);
          bot.style.left = this.horizontalPosition + 'px';
          return bot;
@@ -236,6 +250,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
    // CREATE NEW LEVEL ON SCREEN
    function createGame() {
+    //  console.log(botImage1, botImage2, playerImage, 'ta');
       outcome = 'default';
       engineObj = new Engine();
       // CREATE PLAYER
@@ -279,7 +294,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
          level++;
         //  console.log(level, 'level');
          engineObj.RemoveRobots();
+
          createGame();
+
+        //  myPromise.then((data) => {
+        //    seed = seed + ' ';
+        //    console.log(seed);
+        //    playerImage = data;
+        //    myPromise.then((ret) =>{
+        //      seed = seed + ' ';
+        //      console.log(seed);
+        //      botImage1 = ret;
+        //         myPromise.then((ret) =>{
+        //           botImage2 = ret;
+        //           createGame();
+        //         });
+        //       });
+        //     });
+
       } else if (outcome === 'loss') {
          location.reload();
       } else {
@@ -287,14 +319,56 @@ document.addEventListener("DOMContentLoaded", function(event) {
          if (getSeed.value !== '') {
             seed = getSeed.value;
          }
-        //  console.log(seed, 'seed');
+         console.log(seed, 'seed');
         //  let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
-         player.innerHTML = playerImage;
-         for (let b = 0; b < playerLives.length; b++) {
-            playerLives[b].innerHTML =playerImage;
-         }
+
+
          if (lives > 0) {
-            createGame();
+
+           // 'GET', `https://frogger-api.herokuapp.com/creature/${seed}`
+           request('Get', `https://frogger-api.herokuapp.com/creature/${seed}`)
+              .then(function(e) {
+                seed = seed + 'awdf ';
+                playerImage = e;
+                player.innerHTML = playerImage;
+                for (let b = 0; b < playerLives.length; b++) {
+                   playerLives[b].innerHTML =playerImage;
+                }
+                console.log(e);
+                request('Get', `https://frogger-api.herokuapp.com/creature/${seed}`)
+                  .then(function(de){
+                         console.log('second done');
+                         seed = seed + ' ';
+                        //  console.log(seed, 'seed');
+                         botImage1 = de;
+                         createGame();
+                  }), function(e){
+
+                  };
+              }), function (e){
+
+              };
+          //  aPromise.then((data) => {
+          //    console.log('first done');
+          //    seed = seed + ' ';
+          //    console.log(seed, 'seed');
+          //    playerImage = data;
+          //    player.innerHTML = playerImage;
+          //    for (let b = 0; b < playerLives.length; b++) {
+          //       playerLives[b].innerHTML =playerImage;
+          //    }
+          //    aPromise.then((ret) =>{
+          //      console.log('second done');
+          //      seed = seed + ' ';
+          //      console.log(seed, 'seed');
+          //      botImage1 = ret;
+          //         aPromise.then((ret) =>{
+          //           console.log('3rd done');
+          //           botImage2 = ret;
+          //           createGame();
+          //         });
+          //       });
+          //     });
          }
       }
       modal.classList.add('hidden');
@@ -319,6 +393,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
    }
    setModal();
 
-});
 
-});
+ });
