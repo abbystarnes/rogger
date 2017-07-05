@@ -1,0 +1,145 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+}
+
+form {
+  margin-top: 7em;
+}
+.get-seed {
+  display: block;
+  margin: 0 auto;
+  background-color: black;
+  box-shadow: inset 1px 1px 10px 1px rgba(105,238,255,.66);
+  border:none;
+  padding: 7px 15px;
+}
+
+.get-seed::placeholder {
+  color: #69eeff;
+}
+
+.modal-text {
+  background-color: rgba(0,0,0,.4);
+width: 216px;
+margin: 0 auto;
+padding: 1em;
+color: #69eeff;
+text-align:center;
+}
+
+.seed-label{
+  margin: 0 auto;
+  margin-bottom: 1em;
+  display: block;
+  text-align:center;
+  color: #69eeff;
+}
+
+.submit {
+  background-color: black;
+  margin: 0 auto;
+  display: block;
+  font-family: "Roboto Bold", 'Helvetica', sans-serif;
+  background-color: #69eeff;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 10px;
+  padding: 7px 15px;
+  border: none;
+}
+
+.container {
+  width: 430px;
+  margin: 0 auto;
+  margin-top: 3em;
+  height: 650px;
+  position: relative;
+  background-color: black;
+  background-repeat: repeat;
+  background-size: contain;
+  background-position: center;
+  overflow: hidden;
+  border: 3px solid rgba(105,238,255,.66);
+}
+
+.zapped {
+  border: 2px solid rgba(105,238,255,1);
+}
+
+.modal {
+  width: 80%;
+  height: 350px;
+  position: absolute;
+  border: 1px solid black;
+  left: 10%;
+  top: calc(50% - 175px);
+  z-index: 5;
+  box-shadow: inset -1px 4px 101px 1px rgba(105,238,255,1);
+}
+
+.goals {
+  display: flex;
+  flex-direction: row;
+}
+
+.goal {
+  height: 44px;
+  width: 20%;
+  border-bottom: none;
+  background-image: url('../images/bolt.svg');
+  background-size: 35px;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+
+
+
+.goal:nth-child(2), .goal:nth-child(4){
+  background-color: rgba(105,238,255,.66);
+  background-image: none;
+}
+
+.player {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  left: 190px;
+  bottom: 0px;
+  // box-shadow: inset 0px 0px 60px -8px rgba(255,255,255,0.68);
+}
+
+.lives {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+
+  div {
+    height: 25px;
+    width: 25px;
+    margin: 2.5px;
+    background-size: contain;
+    display: inline-block;
+  }
+}
+
+.win {
+background: none;
+}
+
+.bot {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  z-index:1;
+  // box-shadow: inset 0px 0px 60px -8px rgba(46,241,255,0.88);
+}
+
+.hidden {
+  display: none;
+}
