@@ -320,7 +320,7 @@ function request(method, url){
             seed = getSeed.value;
          }
          console.log(seed, 'seed');
-        //  let playerImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set3)`;
+        //  let playerImage = `url(https://robohash.org/${seed}?set=set3)`;
 
 
          if (lives > 0) {
