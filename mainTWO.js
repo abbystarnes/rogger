@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
          let bot = document.createElement('div');
          bot.className = 'bot';
          bot.style.bottom = this.verticalPosition + 'px';
-         bot.style.backgroundImage = `url(http://galvanize-cors-proxy.herokuapp.com/https://robohash.org/${seed}?set=set${this.set})`;
+         bot.style.backgroundImage = `url(https://robohash.org/${seed}?set=set${this.set})`;
          container.append(bot);
          bot.style.left = this.horizontalPosition + 'px';
          return bot;
